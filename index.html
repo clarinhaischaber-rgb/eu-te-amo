@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Carregando...</title>
+	<style>
+		* { box-sizing: border-box; }
+		body {
+			display: grid;
+			min-height: 100vh;
+			margin: 0;
+			place-items: center;
+			color: #181818;
+			background: #fff;
+			font-family: Arial, Helvetica, sans-serif;
+		}
+
+		p {
+			margin: 0;
+			font-size: 14px;
+			letter-spacing: .08em;
+		}
+	</style>
+</head>
+<body>
+	<p>Carregando...</p>
+
+	<script>
+		setTimeout(() => {
+			window.location.replace('front/html/Home.html');
+		}, 1200);
+	</script>
+</body>
+</html>
