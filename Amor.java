@@ -17,7 +17,7 @@ public class Amor {
 
         System.out.println("E se eu fosse um cachorro, voce ainda me amaria ? 1- Sim 2- Não");
 
-        int resposta = Integer.parseInt(sc.nextLine());
+        resposta = Integer.parseInt(sc.nextLine());
 
         if (resposta == 1) {
             System.out.println("Eu te amo <3");
