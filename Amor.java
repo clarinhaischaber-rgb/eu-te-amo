@@ -1,35 +1,30 @@
-import Pessoa
-import Chaos
+import java.util.Scanner;
 
 public class Amor {
     public static void main(String[] args) {
-        Pessoa joao = new Pessoa("João Andrade");
-        Chaos carta = new Chaos("45 75 20 74 65 20 61 6d 6f. ♡");
 
-        if (joao.existe()) {
-            System.out.println("Eu te amo, João");
+        Scanner sc = new Scanner(System.in);
+    
+        System.out.println("Se eu fosse uma baratinha, você ainda me amaria ? 1- Sim 2- Não");
+
+        int resposta = Integer.parseInt(sc.nextLine());
+
+        if (resposta == 1) {
+            System.out.println("Eu te amo <3");
+        } else {
+            System.out.println("Você não me amaria se eu fosse uma baratinha????");
         }
-        else{
-            System.out.println("Eu nao vivo sem ele :(");
+
+        System.out.println("E se eu fosse um cachorro, voce ainda me amaria ? 1- Sim 2- Não");
+
+        int resposta = Integer.parseInt(sc.nextLine());
+
+        if (resposta == 1) {
+            System.out.println("Eu te amo <3");
+        } else {
+            System.out.println(" Vocé nao me amaria se eu fosse um cachorro???");
         }
-            System.out.println(carta.message);
     }
+
 }
 
-class Pessoa {
-    private String nome;
-
-    public Pessoa(String nome) {
-        this.nome = nome;
-    }
-
-    public boolean existe() {
-        return true; // sempre
-    }
-    class Chaos {
-        private String message;
-
-        public Chaos(String message) {
-        this.message = message;
-    }
-}
