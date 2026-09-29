@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/fotos")
@@ -16,6 +17,12 @@ public class FotoController {
 
     public FotoController(FotoService fotoService) {
         this.fotoService = fotoService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Foto>> listarTodasFotos() {
+        List<Foto> fotos = fotoService.listarTodas();
+        return ResponseEntity.ok(fotos);
     }
 
     @PostMapping(value = "/upload", consumes = "multipart/form-data") 

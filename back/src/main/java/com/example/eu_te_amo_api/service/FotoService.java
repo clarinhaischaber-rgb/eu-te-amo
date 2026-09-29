@@ -6,7 +6,7 @@ import com.example.eu_te_amo_api.model.Foto;
 import com.example.eu_te_amo_api.repository.FotoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.util.List;
 import java.io.IOException;
 import java.util.Map;
 
@@ -21,6 +21,12 @@ public class FotoService {
         this.cloudinary = cloudinary;
     }
 
+    
+
+
+    public List<Foto> listarTodas() {
+    return fotoRepository.findAll();
+    }
     /**
      * Faz upload para o Cloudinary e salva a URL e o publicId no PostgreSQL.
      */
