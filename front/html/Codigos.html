@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Códigos</title>
+    <link rel="stylesheet" href="../css/home.css">
+    <script src="../js/home.js" defer></script>
+</head>
+<body class="resource-theme">
+    <header class="site-header"><nav class="navbar" aria-label="Navegação principal"><a class="brand" href="Nos.html#inicio">J<span>·</span>C</a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu"><span></span><span></span><span></span><span class="sr-only">Abrir menu</span></button><div class="nav-menu" id="main-menu"><a class="nav-link" href="Nos.html">Nós</a><a class="nav-link" href="Joestar.html">Joestar</a><a class="nav-link" href="Caosinha.html">Caosinha</a><a class="nav-link" href="Mensagens.html">Mensagens</a><a class="nav-link active" href="Codigos.html">Códigos</a><a class="nav-link" href="Desenhos.html">Desenhos</a><a class="nav-link" href="Momentos.html">Momentos</a></div></nav></header>
+    <main class="resource-page codes-page">
+        <p class="eyebrow">Laboratório criativo</p>
+        <h1>Códigos</h1>
+        <p class="resource-intro">Um espaço para escrever, testar e guardar pequenos projetos em Java.</p>
+        <section class="code-workspace" aria-label="Gerenciador de arquivos Java">
+            <aside class="file-sidebar">
+                <div class="sidebar-heading">
+                    <div><p class="sidebar-kicker">Projeto</p><h2>Arquivos Java</h2></div>
+                    <span class="file-count">04</span>
+                </div>
+                <label class="file-search">
+                    <span class="sr-only">Pesquisar arquivos Java</span>
+                    <span class="search-icon" aria-hidden="true"></span>
+                    <input type="search" placeholder="Pesquisar arquivo" aria-label="Pesquisar arquivo">
+                </label>
+                <div class="file-list" role="listbox" aria-label="Arquivos Java">
+                    <button class="file-item active" type="button" role="option" aria-selected="true"><span class="java-icon">J</span><span>MeuCodigo.java</span></button>
+                    <button class="file-item" type="button" role="option" aria-selected="false"><span class="java-icon">J</span><span>Cartinha.java</span></button>
+                    <button class="file-item" type="button" role="option" aria-selected="false"><span class="java-icon">J</span><span>Mensagem.java</span></button>
+                    <button class="file-item" type="button" role="option" aria-selected="false"><span class="java-icon">J</span><span>Aventura.java</span></button>
+                </div>
+                <div class="sidebar-actions">
+                    <button class="create-file-button" type="button"><span aria-hidden="true">+</span> Criar arquivo Java</button>
+                    <button class="delete-file-button" type="button"><span aria-hidden="true">&#215;</span> Excluir arquivo</button>
+                </div>
+            </aside>
+            <div class="editor-area">
+                <div class="editor-header">
+                    <div><span class="editor-status"></span><strong>MeuCodigo.java</strong></div>
+                    <span class="editor-language">Java</span>
+                </div>
+                <div class="code-placeholder code-editor">
+                    <div class="code-toolbar"><span></span><span></span><span></span><strong>MeuCodigo.java</strong></div>
+                    <pre><code><span class="code-line"><i>01</i>public class MeuCodigo {</span>
+<span class="code-line"><i>02</i>    public static void main(String[] args) {</span>
+<span class="code-line"><i>03</i>        System.out.println("Em breve");</span>
+<span class="code-line"><i>04</i>    }</span>
+<span class="code-line"><i>05</i>}</span></code></pre>
+                </div>
+                <div class="editor-footer">
+                    <span>Alterações locais</span>
+                    <button class="confirm-edit-button" type="button">Confirmar edição</button>
+                </div>
+                <section class="terminal-panel" aria-label="Terminal do código">
+                    <div class="terminal-header">
+                        <div><span class="terminal-prompt" aria-hidden="true">&gt;_</span><strong>Terminal</strong></div>
+                        <span class="terminal-status">Pronto</span>
+                    </div>
+                    <div class="terminal-output" aria-label="Saída do programa">
+                        <p><span class="terminal-muted">$</span> javac MeuCodigo.java &amp;&amp; java MeuCodigo</p>
+                        <p class="terminal-success">Em breve</p>
+                        <p class="terminal-muted">Processo finalizado com código 0</p>
+                    </div>
+                    <div class="terminal-io">
+                        <label for="program-input">Entrada do programa</label>
+                        <div class="terminal-input-row">
+                            <input id="program-input" type="text" placeholder="Digite um valor para o programa">
+                            <button class="run-button" type="button">Executar</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
