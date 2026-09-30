@@ -2,10 +2,11 @@
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Copia os arquivos da pasta back para o container
+# Copia todo o projeto para o container
 COPY . .
 
-# Dá permissão de execução ao mvnw e compila o projeto sem rodar testes
+# Entra na pasta back para dar permissão e compilar
+WORKDIR /app/back
 RUN chmod +x ./mvnw
 RUN ./mvnw clean package -DskipTests
 
@@ -13,13 +14,13 @@ RUN ./mvnw clean package -DskipTests
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-# Copia o .jar compilado para a imagem final
-COPY --from=build /app/target/*.jar app.jar
+# Copia o .jar gerado na pasta back do build para a raiz do container final
+COPY --from=build /app/back/target/*.jar app.jar
 
-# Expõe a porta 8081 configurada no seu application.properties
+# Expõe a porta 8081 configurada na aplicação
 EXPOSE 8081
 
-# Garante que o Spring Boot escute na porta 8081 do Render
+# Garante que a variável de porta seja respeitada
 ENV PORT=8081
 
 # Executa a aplicação
