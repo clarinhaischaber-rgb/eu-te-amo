@@ -15,16 +15,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Ativa o CORS para ler as origens permitidas na WebConfig.java
             .cors(Customizer.withDefaults())
-            
-            // Desativa CSRF para APIs REST sem sessão de cookie
             .csrf(AbstractHttpConfigurer::disable)
-            
-            // Regras de autorização
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/fotos/**").permitAll() // Libera acesso público às fotos
-                .anyRequest().permitAll()                     // Libera os demais endpoints públicos
+                .requestMatchers("/api/fotos/**").permitAll()
+                .anyRequest().permitAll()
             );
 
         return http.build();

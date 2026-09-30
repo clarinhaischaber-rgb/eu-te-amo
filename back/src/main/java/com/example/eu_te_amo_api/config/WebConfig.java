@@ -10,12 +10,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(
-                    "https://clarinhaischaber-rgb.github.io",
-                    "http://localhost:5500",
-                    "http://127.0.0.1:5500",
-                    "http://localhost:3000",
-                    "http://localhost:8081"
+                .allowedOriginPatterns(
+                    "https://clarinhaischaber-rgb.github.io*",
+                    "http://localhost:*",
+                    "http://127.0.0.1:*"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
