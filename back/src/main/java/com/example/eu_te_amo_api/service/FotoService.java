@@ -25,14 +25,23 @@ public class FotoService {
 
 
     public List<Foto> listarTodas() {
-    return fotoRepository.findAll();
+        // Primeiro limpa fotos inconsistentes automaticamente
+        System.out.println("Iniciando limpeza automática de fotos inconsistentes...");
+        int removidas = limparFotosInconsistentes();
+        System.out.println("Limpeza concluída. " + removidas + " fotos removidas.");
+        return fotoRepository.findAll();
+    }
+
+    public List<Long> listarIds() {
+        return fotoRepository.findAllIds();
     }
     /**
      * Faz upload para o Cloudinary e salva a URL e o publicId no PostgreSQL.
      */
+    @SuppressWarnings("unchecked")
     public Foto uploadESalvar(MultipartFile arquivo) throws IOException {
         // Envia o ficheiro para o Cloudinary
-        Map uploadResult = cloudinary.uploader().upload(
+        Map<String, Object> uploadResult = cloudinary.uploader().upload(
                 arquivo.getBytes(),
                 ObjectUtils.emptyMap()
         );
@@ -40,6 +49,11 @@ public class FotoService {
         // Extrai a URL pública e o public_id
         String url = (String) uploadResult.get("secure_url");
         String publicId = (String) uploadResult.get("public_id");
+
+        // Valida se o upload funcionou corretamente
+        if (url == null || publicId == null) {
+            throw new IOException("Upload para Cloudinary falhou: URL ou publicId nulo");
+        }
 
         // Instancia a entidade e persiste
         Foto foto = new Foto();
@@ -61,5 +75,28 @@ public class FotoService {
 
         // Apaga a linha da tabela Fotos
         fotoRepository.delete(foto);
+    }
+
+    /**
+     * Remove fotos do banco que não existem mais no Cloudinary (inconsistência)
+     */
+    public int limparFotosInconsistentes() {
+        List<Foto> todasFotos = fotoRepository.findAll();
+        int contador = 0;
+
+        for (Foto foto : todasFotos) {
+            try {
+                // Tenta verificar se a imagem existe no Cloudinary via API
+                cloudinary.api().resource(foto.getPublicId(), ObjectUtils.emptyMap());
+                System.out.println("Foto OK - ID: " + foto.getId() + " - PublicId: " + foto.getPublicId());
+            } catch (Exception e) {
+                // Se der erro, a imagem não existe no Cloudinary, remove do banco
+                System.out.println("Removendo foto inconsistente ID: " + foto.getId() + " - PublicId: " + foto.getPublicId() + " - Erro: " + e.getMessage());
+                fotoRepository.delete(foto);
+                contador++;
+            }
+        }
+
+        return contador;
     }
 }

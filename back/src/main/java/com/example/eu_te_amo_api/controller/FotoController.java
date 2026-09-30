@@ -25,6 +25,12 @@ public class FotoController {
         return ResponseEntity.ok(fotos);
     }
 
+    @GetMapping("/ids")
+    public ResponseEntity<List<Long>> listarIdsFotos() {
+        List<Long> ids = fotoService.listarIds();
+        return ResponseEntity.ok(ids);
+    }
+
     @PostMapping(value = "/upload", consumes = "multipart/form-data") 
     public ResponseEntity<Foto> uploadFoto(@RequestParam("foto") MultipartFile arquivo) {
         try {

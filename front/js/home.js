@@ -12,6 +12,9 @@ const cancelDeleteButton = document.querySelector('#cancel-delete');
 const emptyGallery = document.querySelector('#empty-gallery');
 const galleryStatus = document.querySelector('#gallery-status');
 const photosEndpoint = 'http://localhost:8081/api/fotos';
+const photosIdsEndpoint = 'http://localhost:8081/api/fotos/ids';
+const PHOTOS_CACHE_KEY = 'cached_photos';
+const PHOTOS_IDS_CACHE_KEY = 'cached_photos_ids';
 let selectedPhotoId = null;
 
 function updateRelationshipTime() {
@@ -115,16 +118,96 @@ function renderPhotos(photos) {
 }
 
 async function loadPhotos() {
+    // Primeiro, tenta carregar do cache do localStorage
+    const cachedPhotos = localStorage.getItem(PHOTOS_CACHE_KEY);
+    if (cachedPhotos) {
+        try {
+            const photos = JSON.parse(cachedPhotos);
+            renderPhotos(photos);
+            // Busca apenas os IDs do backend para verificar se há novidades
+            fetchAndCachePhotosIfChanged(photos);
+        } catch (error) {
+            console.error('Erro ao ler cache:', error);
+            await fetchAndCachePhotos();
+        }
+    } else {
+        // Se não tem cache, busca do backend
+        await fetchAndCachePhotos();
+    }
+}
+
+// Verifica se há mudanças comparando os IDs das fotos
+function hasPhotosChanged(cachedIds, newIds) {
+    // Se a quantidade mudou, há diferença
+    if (cachedIds.length !== newIds.length) {
+        console.log(`Quantidade mudou: ${cachedIds.length} -> ${newIds.length}`);
+        return true;
+    }
+    
+    const sortedCachedIds = [...cachedIds].sort();
+    const sortedNewIds = [...newIds].sort();
+    
+    // Verifica se os IDs são os mesmos
+    const changed = JSON.stringify(sortedCachedIds) !== JSON.stringify(sortedNewIds);
+    if (changed) {
+        console.log('IDs mudaram:', sortedCachedIds, '->', sortedNewIds);
+    }
+    return changed;
+}
+
+async function fetchAndCachePhotosIfChanged(cachedPhotos) {
+    try {
+        // Primeiro busca apenas os IDs (muito leve)
+        const response = await fetch(photosIdsEndpoint);
+        if (!response.ok) {
+            throw new Error('Não foi possível verificar as imagens.');
+        }
+        const newIds = await response.json();
+        
+        const cachedIds = cachedPhotos.map(p => p.id);
+        
+        // Só busca as fotos completas se houver mudança nos IDs
+        if (hasPhotosChanged(cachedIds, newIds)) {
+            console.log('Há novas fotos, buscando imagens completas...');
+            await fetchAndCachePhotos();
+        } else {
+            console.log('Nenhuma nova foto, cache mantido.');
+        }
+    } catch (error) {
+        console.error('Erro ao verificar IDs:', error);
+        // Se der erro na verificação, força atualização completa
+        console.log('Forçando atualização completa devido a erro...');
+        await fetchAndCachePhotos();
+    }
+}
+
+async function fetchAndCachePhotos() {
     try {
         const response = await fetch(photosEndpoint);
         if (!response.ok) {
             throw new Error('Não foi possível carregar as imagens.');
         }
-        renderPhotos(await response.json());
+        const photos = await response.json();
+        // Salva no cache
+        localStorage.setItem(PHOTOS_CACHE_KEY, JSON.stringify(photos));
+        renderPhotos(photos);
     } catch (error) {
         setGalleryStatus(error.message);
     }
 }
+
+function clearPhotosCache() {
+    localStorage.removeItem(PHOTOS_CACHE_KEY);
+    console.log('Cache de fotos limpo');
+}
+
+// Torna disponível no console para debug manual
+window.clearPhotosCache = clearPhotosCache;
+window.forceReloadPhotos = async () => {
+    console.log('Forçando recarregamento de fotos...');
+    clearPhotosCache();
+    await fetchAndCachePhotos();
+};
 
 async function uploadPhoto(file) {
     const formData = new FormData();
@@ -136,7 +219,8 @@ async function uploadPhoto(file) {
         throw new Error('Não foi possível enviar a imagem.');
     }
 
-    await loadPhotos();
+    // Atualiza o cache buscando as fotos atualizadas
+    await fetchAndCachePhotos();
     setGalleryStatus('Imagem adicionada.');
 }
 
@@ -146,18 +230,32 @@ async function deleteSelectedPhoto() {
     }
 
     setGalleryStatus('Excluindo imagem...');
-    const response = await fetch(`${photosEndpoint}/${selectedPhotoId}`, { method: 'DELETE' });
-    if (!response.ok) {
-        throw new Error('Não foi possível excluir a imagem.');
-    }
+    console.log(`Tentando deletar foto ID: ${selectedPhotoId}`);
+    
+    try {
+        const response = await fetch(`${photosEndpoint}/${selectedPhotoId}`, { method: 'DELETE' });
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Erro ao deletar:', errorText);
+            throw new Error('Não foi possível excluir a imagem.');
+        }
 
-    clearPhotoSelection();
-    await loadPhotos();
-    setGalleryStatus('Imagem excluída.');
+        clearPhotoSelection();
+        // Atualiza o cache buscando as fotos atualizadas
+        await fetchAndCachePhotos();
+        setGalleryStatus('Imagem excluída.');
+        console.log('Foto deletada com sucesso');
+    } catch (error) {
+        console.error('Erro no delete:', error);
+        setGalleryStatus(error.message);
+    }
 }
 
 if (photoGallery) {
     addPhotoButton.addEventListener('click', () => photoInput.click());
+    
     photoInput.addEventListener('change', async () => {
         const [file] = photoInput.files;
         if (!file) {
