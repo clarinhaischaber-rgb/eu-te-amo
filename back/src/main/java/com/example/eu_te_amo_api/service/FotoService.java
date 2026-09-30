@@ -70,11 +70,15 @@ public class FotoService {
         Foto foto = fotoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Foto não encontrada com o id: " + id));
 
+        System.out.println("Deletando foto do Cloudinary: " + foto.getPublicId());
+        
         // Deleta no Cloudinary pelo public_id
-        cloudinary.uploader().destroy(foto.getPublicId(), ObjectUtils.emptyMap());
+        Map<String, Object> result = cloudinary.uploader().destroy(foto.getPublicId(), ObjectUtils.emptyMap());
+        System.out.println("Resultado do delete Cloudinary: " + result);
 
         // Apaga a linha da tabela Fotos
         fotoRepository.delete(foto);
+        System.out.println("Foto removida do banco com sucesso");
     }
 
     /**
