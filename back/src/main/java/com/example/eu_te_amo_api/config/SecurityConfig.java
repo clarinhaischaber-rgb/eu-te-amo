@@ -2,6 +2,7 @@ package com.example.eu_te_amo_api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -14,13 +15,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Desativa CSRF (necessário para receber requisições POST de ferramentas externas como Postman/Insomnia)
+            // Ativa o CORS para ler as origens permitidas na WebConfig.java
+            .cors(Customizer.withDefaults())
+            
+            // Desativa CSRF para APIs REST sem sessão de cookie
             .csrf(AbstractHttpConfigurer::disable)
             
-            // Configura as regras de acesso aos endpoints
+            // Regras de autorização
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/fotos/**").permitAll() // Libera os endpoints de fotos sem exigir login
-                .anyRequest().authenticated()                 // Exige autenticação para o resto
+                .requestMatchers("/api/fotos/**").permitAll() // Libera acesso público às fotos
+                .anyRequest().permitAll()                     // Libera os demais endpoints públicos
             );
 
         return http.build();
