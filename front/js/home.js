@@ -209,9 +209,78 @@ window.forceReloadPhotos = async () => {
     await fetchAndCachePhotos();
 };
 
+// Função que redimensiona e comprime a imagem usando HTML5 Canvas
+function compressImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            
+            img.onload = () => {
+                let width = img.width;
+                let height = img.height;
+
+                // Mantém a proporção da imagem dentro do limite
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width = Math.round((width * maxHeight) / height);
+                        height = maxHeight;
+                    }
+                }
+
+                // Desenha a imagem no Canvas
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Converte para Blob (JPEG com 70% de qualidade)
+                canvas.toBlob(
+                    (blob) => {
+                        if (blob) {
+                            const compressedFile = new File([blob], file.name, {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            });
+                            resolve(compressedFile);
+                        } else {
+                            reject(new Error('Falha ao comprimir imagem'));
+                        }
+                    },
+                    'image/jpeg',
+                    quality
+                );
+            };
+            img.onerror = (error) => reject(error);
+        };
+        reader.onerror = (error) => reject(error);
+    });
+}
+
 async function uploadPhoto(file) {
+    setGalleryStatus('Comprimindo imagem...');
+    
+    // Tenta comprimir a foto antes de enviar
+    let fileToUpload = file;
+    try {
+        fileToUpload = await compressImage(file, 1200, 1200, 0.7);
+        console.log(`Foto comprimida de ${(file.size / 1024 / 1024).toFixed(2)} MB para ${(fileToUpload.size / 1024).toFixed(2)} KB`);
+    } catch (e) {
+        console.warn('Não foi possível comprimir a foto, enviando original:', e);
+    }
+
     const formData = new FormData();
-    formData.append('foto', file);
+    formData.append('foto', fileToUpload);
     setGalleryStatus('Enviando imagem...');
 
     const response = await fetch(`${photosEndpoint}/upload`, { method: 'POST', body: formData });
@@ -285,3 +354,4 @@ if (photoGallery) {
 
     loadPhotos();
 }
+
