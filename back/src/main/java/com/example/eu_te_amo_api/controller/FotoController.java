@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/fotos")
-@CrossOrigin(origins = "*")
 public class FotoController {
 
     private final FotoService fotoService;
