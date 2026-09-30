@@ -12,12 +12,36 @@ html { scroll-behavior: smooth; }
 body { position: relative; min-height: 100vh; margin: 0; color: var(--black); background: #fff; font-family: var(--sans); }
 body::before, body::after { pointer-events: none; }
 body.joestar-theme { --theme-accent: #6d9ed4; --theme-line: #c9ddf3; background: #f1f7ff; overflow-x: hidden; }
-body.joestar-theme::before { position: fixed; z-index: 0; inset: 76px 0 0; opacity: .34; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='92' height='92' viewBox='0 0 92 92'%3E%3Cpath d='M46 17 50 38 71 34 54 46 71 58 50 54 46 75 42 54 21 58 38 46 21 34 42 38Z' fill='none' stroke='%236d9ed4' stroke-width='2'/%3E%3C/svg%3E"); background-size: 92px 92px; content: ""; transform: rotate(-12deg) scale(1.50); }
-body.joestar-theme::after { display: none; }
+body.joestar-theme::before { 
+    position: fixed; 
+    z-index: 0; 
+    
+    /* Cria uma margem de escape gigante para a rotação nunca revelar bordas vazias */
+    inset: -50%; 
+    
+    opacity: .34; 
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='92' height='92' viewBox='0 0 92 92'%3E%3Cpath d='M46 10 L54 35 L80 35 L59 50 L67 75 L46 60 L25 75 L33 50 L12 35 L38 35 Z' fill='none' stroke='%236d9ed4' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E"); 
+    
+    /* Altere AQUI para deixar as estrelas menores ou maiores (ex: 60px 60px) */
+    background-size: 70px 70px; 
+    
+    content: ""; 
+    
+    /* Apenas rotaciona, sem encolher a tela */
+    transform: rotate(-12deg); 
+}body.joestar-theme::after { display: none; }
 body.nos-theme { background: #F0EBE0; }
 body.caosinha-theme { --theme-accent: #d886a8; --theme-line: #f0cbdc; background: #fff3f8; overflow-x: hidden; }
-body.caosinha-theme::before { position: fixed; z-index: 0; inset: 76px 0 0; opacity: .3; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='118' height='118' viewBox='0 0 118 118'%3E%3Cg fill='none' stroke='%23d886a8' stroke-width='2'%3E%3Cellipse cx='48' cy='53' rx='17' ry='24' transform='rotate(-28 48 53)'/%3E%3Cellipse cx='70' cy='53' rx='17' ry='24' transform='rotate(28 70 53)'/%3E%3Celline x1='59' y1='49' x2='59' y2='76'/%3E%3Cpath d='M59 48c-5-8-11-10-16-9M59 48c5-8 11-10 16-9'/%3E%3C/g%3E%3Ccircle cx='59' cy='49' r='3' fill='%23d886a8'/%3E%3C/svg%3E"); background-size: 118px 118px; content: ""; transform: rotate(12deg) scale(1.50); }
-body.caosinha-theme::after { display: none; }
+body.caosinha-theme::before { 
+    position: fixed; 
+    z-index: 0; 
+    inset: 76px 0 0; 
+    opacity: .3; 
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='118' height='118' viewBox='0 0 118 118'%3E%3Cg fill='none' stroke='%23d886a8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- Corpo central --%3E%3Cpath d='M56 42 C54 48 54 68 56 74 C58 74 62 74 64 74 C66 68 66 48 64 42 C62 40 58 40 56 42 Z'/%3E%3C!-- Antenas --%3E%3Cpath d='M58 41 L46 28 M62 41 L70 26'/%3E%3C!-- Asa Esquerda (Espiral) --%3E%3Cpath d='M55 46 C35 32 25 50 28 62 C31 72 45 74 50 66 C53 60 50 50 42 50 C36 50 36 58 40 60 C42 61 45 60 45 57'/%3E%3C!-- Asa Direita (Arredondada com divisões) --%3E%3Cpath d='M65 46 C75 40 88 42 88 53 C88 58 80 60 88 65 C88 74 74 76 65 70'/%3E%3C/g%3E%3C/svg%3E"); 
+    background-size: 118px 118px; 
+    content: ""; 
+    transform: rotate(12deg) scale(1.50); 
+}body.caosinha-theme::after { display: none; }
 a { color: inherit; text-decoration: none; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
 
@@ -63,7 +87,7 @@ body.joestar-theme main, body.caosinha-theme main { display: grid; grid-template
 .nos-theme .gallery-item { background: #F0EBE0; border-color: #d8cfbf; }
 .together { background: #faf9f7; }
 .home-placeholder { display: grid; place-items: center; min-height: 100vh; padding: 120px 24px 60px; text-align: center; }
-.main-banner { position: relative; z-index: 1; width: 100%; padding-top: 77px; }
+.main-banner { position: relative; z-index: 1; width: 100%; padding-top: 78px;} 
 .main-banner img { display: block; width: 100%; max-height: 430px; object-fit: cover; }
 .home-placeholder h1 { margin: 0; font-size: clamp(36px, 6vw, 76px); font-weight: 400; letter-spacing: -.07em; }
 .relationship-time { max-width: 760px; margin: 0; color: var(--accent); font-size: clamp(22px, 3vw, 36px); line-height: 1.4; }
