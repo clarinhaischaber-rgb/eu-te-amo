@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Joestar</title>
     <link rel="stylesheet" href="../css/home.css">
     <script src="../js/home.js" defer></script>
+    <script src="../js/JoestarGame.js" defer></script>
 </head>
+
 <body class="joestar-theme">
     <header class="site-header">
         <nav class="navbar" aria-label="Navegação principal">
@@ -27,24 +30,29 @@
     </header>
     <main>
         <section class="photo-section single-page-section">
-            <div class="section-label">01</div>
+
             <div class="photo-frame" aria-label="Foto do Joestar">
                 <img src="../../img/Joestar.jpg" alt="Foto do Joestar">
             </div>
-            <div class="photo-copy"><h1>Joestar</h1></div>
+            <div class="photo-copy">
+                <h1>Joestar</h1>
+            </div>
         </section>
         <section class="about-section" id="sobre-mim">
-            <div class="section-label">02</div>
-            <div class="section-heading">
-                <p class="eyebrow">Conheça melhor</p>
-                <h2>Sobre mim</h2>
-                <p>Joestar é uma presença especial, cheia de personalidade, carinho e momentos que tornam os nossos dias mais divertidos.</p>
-            </div>
-            <div class="tab-list" role="tablist" aria-label="Informações sobre Joestar">
-                <a class="tab active" href="#sobre-mim" role="tab" aria-selected="true">Sobre mim</a>
-                <a class="tab" href="Nos.html#nossas-fotos" role="tab" aria-selected="false">Nossas fotos</a>
+            <h2>Sobre mim</h2>
+            <p>Joestar é uma presença especial, cheia de personalidade, carinho e momentos que tornam os nossos dias
+                mais divertidos.</p>
+        </section>
+        <!-- AQUI FICA A TELA DO JOGO -->
+        <section class="game-section" id="jogo">
+            <h2>Minigame do Joestar</h2>
+            <div class="game-container">
+                <!-- A tag canvas cria a janela/tela 2D onde o jogo acontece -->
+                <canvas id="gameCanvas" width="800" height="400"></canvas>
             </div>
         </section>
     </main>
+
 </body>
+
 </html>

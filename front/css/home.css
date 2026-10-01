@@ -14,7 +14,7 @@ body::before, body::after { pointer-events: none; }
 body.joestar-theme { --theme-accent: #6d9ed4; --theme-line: #c9ddf3; background: #f1f7ff; overflow-x: hidden; }
 body.joestar-theme::before { 
     position: fixed; 
-    z-index: 0; 
+    z-index: -3; 
     
     /* Cria uma margem de escape gigante para a rotação nunca revelar bordas vazias */
     inset: -50%; 
@@ -270,4 +270,32 @@ body.joestar-theme .about-section, body.caosinha-theme .about-section { max-widt
 
 @media (max-width: 480px) {
     .gallery-section .photo-gallery { grid-template-columns: 1fr; }
+}
+
+
+
+
+
+
+
+.game-section {
+    text-align: center;
+    margin: 2rem auto;
+}
+
+.game-container {
+    display: flex;
+    justify-content: center;
+}
+
+#gameCanvas {
+    background-color: #000; /* Fundo do jogo enquanto carrega */
+    border: 4px solid #fff;  /* Borda para destacar */
+    border-radius: 8px;
+    max-width: 100%;        /* Faz o jogo adaptar ao tamanho da tela do celular */
+    height: auto;
+    
+    /* ESSENCIAL PARA PIXEL ART: não deixa o navegador borras os pixels */
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
