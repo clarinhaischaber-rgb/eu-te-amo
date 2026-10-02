@@ -48,8 +48,7 @@ const GAME_CONFIG = {
             WINDUP_FRAMES: 30,   // Frames de aviso pré-ataque (tempo de reagir/dar parry)
             ACTIVE_FRAMES: 6,     // Frames onde o golpe causa dano ativo
             RECOVERY_FRAMES: 12,  // Frames de recuperação (atacante vulnerável)
-            HITBOX_WIDTH: 30,
-            HITBOX_HEIGHT: 30,
+            HITBOX_RADIUS: 52,
             DAMAGE_UNBLOCKED: 5,
             DAMAGE_BLOCKED: 1,
             KNOCKBACK_FORCE: 15,
@@ -189,6 +188,11 @@ const GAME_CONFIG = {
                     count: 11,
                     filename: (index) => `sDIO_0-${index + 431}.png`
                 },
+                attack: {
+                    folder: '../../img/joestargame/lvl1/p2/atack',
+                    count: 13,
+                    filename: (index) => `sDIO_0-${index + 340}.png`
+                },
                 knife: {
                     folder: '../../img/joestargame/lvl1/p2/knife',
                     count: 1,
@@ -212,7 +216,19 @@ const GAME_CONFIG = {
                 height: 112,
                 groundOffset: 30
             },
+            spriteDisplays: {
+                attack: {
+                    sourceX: 155,
+                    sourceY: 40,
+                    sourceWidth: 190,
+                    sourceHeight: 155,
+                    width: 152,
+                    height: 124,
+                    groundOffset: 30
+                }
+            },
             animationSpeeds: {
+                attack: 4,
                 parry: 3
             },
             ultSound: '../../sounds/gameJoestar/lvl1/hd-stardust-crusaders-za-warudo_1.mp3',
@@ -655,13 +671,12 @@ class Fighter {
     }
 
     getAttackHitbox() {
-        const boxWidth = GAME_CONFIG.COMBAT.ATTACK.HITBOX_WIDTH;
-        const boxHeight = GAME_CONFIG.COMBAT.ATTACK.HITBOX_HEIGHT;
+        const radius = GAME_CONFIG.COMBAT.ATTACK.HITBOX_RADIUS;
         return {
-            x: this.facingRight ? this.x + this.width : this.x - boxWidth,
-            y: this.y + 10,
-            width: boxWidth,
-            height: boxHeight
+            type: 'circle',
+            x: this.x + this.width / 2,
+            y: this.y + this.height / 2,
+            radius
         };
     }
 
@@ -804,10 +819,12 @@ class Fighter {
                 const progress = 1 - (remaining / WINDUP_FRAMES);
 
                 ctx.fillStyle = `rgba(231, 76, 60, ${0.15 + progress * 0.4})`;
-                ctx.fillRect(attackBox.x, attackBox.y, attackBox.width, attackBox.height);
+                ctx.beginPath();
+                ctx.arc(attackBox.x, attackBox.y, attackBox.radius, 0, Math.PI * 2);
+                ctx.fill();
                 ctx.strokeStyle = '#e74c3c';
                 ctx.lineWidth = 2;
-                ctx.strokeRect(attackBox.x, attackBox.y, attackBox.width, attackBox.height);
+                ctx.stroke();
 
                 // Exclamação piscando acima da cabeça avisando o parry
                 if (Math.floor(globalFrameCount / 4) % 2 === 0) {
@@ -817,7 +834,9 @@ class Fighter {
                 }
             } else if (phase === 'active') {
                 ctx.fillStyle = '#e74c3c';
-                ctx.fillRect(attackBox.x, attackBox.y, attackBox.width, attackBox.height);
+                ctx.beginPath();
+                ctx.arc(attackBox.x, attackBox.y, attackBox.radius, 0, Math.PI * 2);
+                ctx.fill();
             }
         }
 
@@ -904,6 +923,14 @@ class Projectile {
 // ============================================================================
 class CombatSystem {
     static checkCollision(rect1, rect2) {
+        if (rect1.type === 'circle') {
+            const closestX = Math.max(rect2.x, Math.min(rect1.x, rect2.x + rect2.width));
+            const closestY = Math.max(rect2.y, Math.min(rect1.y, rect2.y + rect2.height));
+            const distanceX = rect1.x - closestX;
+            const distanceY = rect1.y - closestY;
+            return distanceX * distanceX + distanceY * distanceY <= rect1.radius * rect1.radius;
+        }
+
         return (
             rect1.x < rect2.x + rect2.width &&
             rect1.x + rect1.width > rect2.x &&
@@ -1055,6 +1082,10 @@ class JoestarGame {
 
         this.ctx = this.canvas.getContext('2d');
         this.ctx.imageSmoothingEnabled = false;
+        this.effectCanvas = document.createElement('canvas');
+        this.effectCanvas.width = this.canvas.width;
+        this.effectCanvas.height = this.canvas.height;
+        this.effectCtx = this.effectCanvas.getContext('2d');
 
         this.soundManager = new SoundManager(GAME_CONFIG.AUDIO);
         this.inputManager = new InputManager(GAME_CONFIG.CONTROLS);
@@ -1682,9 +1713,10 @@ class JoestarGame {
                 ctx.arc(x, y, currentRadius, 0, Math.PI * 2);
                 ctx.clip(); // Limita o efeito de inversão exatamente dentro da bolha temporal
 
-                ctx.globalCompositeOperation = 'difference';
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                this.effectCtx.clearRect(0, 0, canvas.width, canvas.height);
+                this.effectCtx.drawImage(canvas, 0, 0);
+                ctx.filter = 'invert(1)';
+                ctx.drawImage(this.effectCanvas, 0, 0);
                 ctx.restore();
 
                 const normalFighter = this.timeStopNormalFighterId === 'p1'
