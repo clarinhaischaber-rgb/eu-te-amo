@@ -6,6 +6,7 @@
     <title>Mensagens</title>
     <link rel="stylesheet" href="../css/home.css">
     <script src="../js/home.js" defer></script>
+    <script src="../js/carta.js" defer></script>
 </head>
 <body class="resource-theme">
     <header class="site-header">
@@ -27,7 +28,23 @@
         <h1>Mensagens</h1>
         <p class="resource-intro">Aqui ficarão as cartas permanentes e as mensagens surpresa do biscoito da sorte.</p>
         <div class="resource-grid">
-            <article class="resource-card"><span class="card-number">01</span><h2>Cartas</h2><p>Mensagens especiais para reler sempre que quiser.</p><span class="placeholder-label">Em breve</span></article>
+            <article class="resource-card carta-card">
+                <span class="card-number">01</span>
+                <h2>Cartas</h2>
+                <form id="carta-form" class="carta-form">
+                    <label>Destinatário<input id="carta-destinatario" name="destinatario" required></label>
+                    <label>Data<input id="carta-data" name="data" type="date" required></label>
+                    <label>Texto<textarea id="carta-text" name="text" rows="5" required></textarea></label>
+                    <div class="carta-form-row">
+                        <label>Cor da carta<select id="carta-cor-carta" name="corCarta" required></select></label>
+                        <label>Cor da letra<select id="carta-cor-letra" name="corLetra" required></select></label>
+                    </div>
+                    <label>Fonte<select id="carta-fonte" name="fonte" required></select></label>
+                    <button type="submit" class="carta-submit">Guardar carta</button>
+                    <p id="carta-status" class="carta-status" role="status"></p>
+                </form>
+                <div id="cartas-lista" class="cartas-lista" aria-live="polite"></div>
+            </article>
             <article class="resource-card"><span class="card-number">02</span><h2>Biscoito da sorte</h2><p>Uma surpresa diferente para cada momento.</p><span class="placeholder-label">Em breve</span></article>
         </div>
     </main>

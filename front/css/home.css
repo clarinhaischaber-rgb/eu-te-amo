@@ -143,6 +143,23 @@ body.caosinha-theme .about-section > * {
 .resource-card h2 { margin: 35px 0 12px; font-size: 28px; font-weight: 400; }
 .resource-card p { margin: 0 0 30px; color: var(--gray); line-height: 1.6; }
 .card-number, .placeholder-label { color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.carta-card { grid-column: 1 / -1; }
+.carta-form { display: grid; gap: 14px; max-width: 760px; }
+.carta-form label { display: grid; gap: 6px; color: var(--gray); font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+.carta-form input, .carta-form textarea, .carta-form select { width: 100%; box-sizing: border-box; padding: 10px 12px; color: var(--black); background: #fafafa; border: 1px solid var(--line); font: inherit; font-size: 13px; text-transform: none; }
+.carta-form textarea { resize: vertical; }
+.carta-form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.carta-submit, .carta-delete { width: max-content; min-height: 38px; padding: 8px 14px; color: #fff; background: var(--black); border: 1px solid var(--black); cursor: pointer; font: inherit; font-size: 11px; font-weight: 700; }
+.carta-submit:disabled { opacity: .55; cursor: wait; }
+.carta-status { min-height: 18px; margin: 0; color: var(--gray); font-size: 12px; }
+.carta-status.is-error { color: #a2544a; }
+.cartas-lista { display: grid; gap: 12px; margin-top: 28px; }
+.carta-item { position: relative; padding: 20px; border: 1px solid rgba(0, 0, 0, .12); box-shadow: 0 8px 20px rgba(24, 24, 24, .08); }
+.carta-item-header { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 14px; font-size: 12px; }
+.carta-item time { opacity: .7; }
+.carta-item p { margin: 0 0 18px; white-space: pre-wrap; }
+.carta-delete { color: inherit; background: transparent; border-color: currentColor; opacity: .7; }
+.carta-empty { margin: 0; color: var(--gray); font-size: 13px; }
 .code-placeholder { max-width: 700px; overflow: hidden; background: #202123; color: #f1f1eb; border: 1px solid #38393c; }
 .code-toolbar { display: flex; align-items: center; gap: 7px; padding: 15px 18px; background: #2a2b2e; color: #aaa; font-size: 11px; letter-spacing: .05em; }
 .code-toolbar span { width: 8px; height: 8px; border-radius: 50%; background: #d886a8; }
