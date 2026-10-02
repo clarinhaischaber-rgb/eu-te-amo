@@ -306,9 +306,6 @@ class SoundManager {
             if (this.audioCtx && this.audioCtx.state === 'suspended') {
                 this.audioCtx.resume();
             }
-            if (this.bgm.paused && !this.bgmStopped && !this.bgmPaused && !this.bgm.error && !this.muted) {
-                this.bgm.play().catch(() => {});
-            }
         };
 
         window.addEventListener('keydown', unlock, { once: false });
@@ -1089,6 +1086,9 @@ class JoestarGame {
         // Estado do Jogo
         this.gameOver = false;
         this.isPaused = false;
+        this.gameStarted = false;
+        this.hasPaused = false;
+        this.pendingFullscreenResume = false;
         this.winnerMessage = '';
         this.globalFrameCount = 0;
         this.attackSequence = 0;
@@ -1110,9 +1110,14 @@ class JoestarGame {
 
     setupEventListeners() {
         window.addEventListener('keydown', (e) => {
+            const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement);
+
             // Alternar Pause (ESC)
-            if (this.inputManager.isPressed(GAME_CONFIG.CONTROLS.PAUSE) && !this.gameOver) {
-                this.togglePause();
+            if (e.key === 'Escape' && this.gameStarted && !this.gameOver) {
+                if (isFull) {
+                    e.preventDefault();
+                    if (!this.isPaused) this.togglePause();
+                }
                 return;
             }
 
@@ -1178,6 +1183,26 @@ class JoestarGame {
             btn.addEventListener('mouseleave', handleUp);
         };
 
+        const btnStartGame = document.getElementById('btnStartGame');
+        if (btnStartGame) {
+            btnStartGame.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggleFullscreen();
+                this.gameStarted = true;
+                this.soundManager.resumeBgm();
+                this.canvas.parentElement.parentElement.classList.add('game-started');
+            });
+        }
+
+        const btnReturnFullscreen = document.getElementById('btnReturnFullscreen');
+        if (btnReturnFullscreen) {
+            btnReturnFullscreen.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.pendingFullscreenResume = true;
+                this.toggleFullscreen();
+            });
+        }
+
         // --- BOTÃO DE TELA CHEIA ---
         const btnFullscreen = document.getElementById('btnFullscreen');
         if (btnFullscreen) {
@@ -1197,6 +1222,20 @@ class JoestarGame {
             document.addEventListener('fullscreenchange', updateFsText);
             document.addEventListener('webkitfullscreenchange', updateFsText);
         }
+
+        const handleFullscreenChange = () => {
+            const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement);
+            if (isFull && this.pendingFullscreenResume) {
+                this.pendingFullscreenResume = false;
+                this.canvas.parentElement.parentElement.classList.remove('paused-outside');
+                if (this.isPaused) this.togglePause();
+            } else if (!isFull && this.gameStarted) {
+                if (!this.isPaused) this.togglePause();
+                this.canvas.parentElement.parentElement.classList.add('paused-outside');
+            }
+        };
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 
         // --- BOTÃO DE PAUSE ---
         const btnPause = document.getElementById('btnPause');
@@ -1274,7 +1313,11 @@ class JoestarGame {
 
         if (!isFull) {
             if (wrapper.requestFullscreen) {
-                wrapper.requestFullscreen().catch(() => {});
+                wrapper.requestFullscreen().then(() => {
+                    if (screen.orientation?.lock) {
+                        screen.orientation.lock('landscape').catch(() => {});
+                    }
+                }).catch(() => {});
             } else if (wrapper.webkitRequestFullscreen) {
                 wrapper.webkitRequestFullscreen();
             }
@@ -1289,6 +1332,10 @@ class JoestarGame {
 
     togglePause() {
         this.isPaused = !this.isPaused;
+        if (this.isPaused) {
+            this.hasPaused = true;
+            this.canvas.parentElement.parentElement.classList.add('has-restart');
+        }
         if (this.isPaused) {
             this.soundManager.pauseBgm();
         } else {
@@ -1456,7 +1503,7 @@ class JoestarGame {
     }
 
     update() {
-        if (this.gameOver || this.isPaused) return;
+        if (!this.gameStarted || this.gameOver || this.isPaused) return;
         this.globalFrameCount++;
 
         // Processa delay de ativação da Ultimate (P1)
