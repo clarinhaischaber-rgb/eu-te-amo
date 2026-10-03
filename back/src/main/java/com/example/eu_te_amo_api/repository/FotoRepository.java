@@ -8,6 +8,9 @@ import java.util.List;
 
 @Repository
 public interface FotoRepository extends JpaRepository<Foto, Long> {
-    @Query("SELECT f.id FROM Foto f")
+    
+    @Query("SELECT f.id FROM Foto f ORDER BY f.id DESC")
     List<Long> findAllIds();
+
+    long countByPublicId(String publicId);
 }

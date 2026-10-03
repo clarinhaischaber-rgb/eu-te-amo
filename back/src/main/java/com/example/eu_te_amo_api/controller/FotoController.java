@@ -30,12 +30,28 @@ public class FotoController {
         return ResponseEntity.ok(ids);
     }
 
+    // Endpoint para upload de arquivo único
     @PostMapping(value = "/upload", consumes = "multipart/form-data") 
     public ResponseEntity<Foto> uploadFoto(@RequestParam("foto") MultipartFile arquivo) {
         try {
             Foto fotoSalva = fotoService.uploadESalvar(arquivo);
             return ResponseEntity.status(HttpStatus.CREATED).body(fotoSalva);
         } catch (Exception e) {
+            System.err.println("Erro no upload de foto: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // NOVO: Endpoint para envio de múltiplas fotos em lote único
+    @PostMapping(value = "/upload-multiple", consumes = "multipart/form-data") 
+    public ResponseEntity<List<Foto>> uploadFotos(@RequestParam("fotos") List<MultipartFile> arquivos) {
+        try {
+            List<Foto> fotosSalvas = fotoService.uploadESalvarMultiplas(arquivos);
+            return ResponseEntity.status(HttpStatus.CREATED).body(fotosSalvas);
+        } catch (Exception e) {
+            System.err.println("Erro no upload múltiplo de fotos: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
