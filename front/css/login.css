@@ -1,0 +1,138 @@
+@import url('./base.css');
+
+.login-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 76px);
+    padding: 120px 22px 60px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 36px 32px;
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: 0 12px 32px rgba(24, 24, 24, .05);
+}
+
+.login-header {
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+.login-header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -.05em;
+}
+
+.login-header p {
+    margin: 0;
+    color: var(--gray);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.login-form {
+    display: grid;
+    gap: 18px;
+}
+
+.login-form label {
+    display: grid;
+    gap: 6px;
+    color: var(--gray);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 12px 14px;
+    color: var(--black);
+    background: #fafafa;
+    border: 1px solid var(--line);
+    font: inherit;
+    font-size: 14px;
+    transition: border-color .2s ease;
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: var(--black);
+    background: #fff;
+}
+
+.login-submit-btn {
+    width: 100%;
+    min-height: 44px;
+    margin-top: 6px;
+    color: #fff;
+    background: var(--black);
+    border: 1px solid var(--black);
+    cursor: pointer;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    transition: opacity .2s ease;
+}
+
+.login-submit-btn:hover {
+    opacity: .88;
+}
+
+.login-divider {
+    position: relative;
+    margin: 24px 0;
+    text-align: center;
+}
+
+.login-divider::before {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    height: 1px;
+    background: var(--line);
+    content: "";
+}
+
+.login-divider span {
+    position: relative;
+    padding: 0 12px;
+    color: var(--gray);
+    background: #fff;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.visitor-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    color: var(--black);
+    background: transparent;
+    border: 1px solid var(--line);
+    cursor: pointer;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    transition: background .2s ease, border-color .2s ease;
+}
+
+.visitor-btn:hover {
+    background: var(--soft);
+    border-color: var(--black);
+}

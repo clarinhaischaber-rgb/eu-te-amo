@@ -1,0 +1,151 @@
+@import url('./base.css');
+
+.account-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 76px);
+    padding: 120px 22px 60px;
+}
+
+.account-card {
+    width: 100%;
+    max-width: 440px;
+    padding: 36px 32px;
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: 0 12px 32px rgba(24, 24, 24, .05);
+}
+
+.account-header {
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+.account-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    margin-bottom: 12px;
+    color: var(--accent);
+    background: rgba(201, 104, 87, 0.1);
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.account-header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -.05em;
+}
+
+.account-header p {
+    margin: 0;
+    color: var(--gray);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.account-form {
+    display: grid;
+    gap: 18px;
+}
+
+.account-form label {
+    display: grid;
+    gap: 6px;
+    color: var(--gray);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+
+.account-form input {
+    width: 100%;
+    padding: 12px 14px;
+    color: var(--black);
+    background: #fafafa;
+    border: 1px solid var(--line);
+    font: inherit;
+    font-size: 14px;
+    transition: border-color .2s ease;
+}
+
+.account-form input:focus {
+    outline: none;
+    border-color: var(--black);
+    background: #fff;
+}
+
+.account-submit-btn {
+    width: 100%;
+    min-height: 44px;
+    margin-top: 6px;
+    color: #fff;
+    background: var(--black);
+    border: 1px solid var(--black);
+    cursor: pointer;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    transition: opacity .2s ease;
+}
+
+.account-submit-btn:hover {
+    opacity: .88;
+}
+
+.account-divider {
+    position: relative;
+    margin: 24px 0;
+    text-align: center;
+}
+
+.account-divider::before {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    height: 1px;
+    background: var(--line);
+    content: "";
+}
+
+.account-divider span {
+    position: relative;
+    padding: 0 12px;
+    color: var(--gray);
+    background: #fff;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    color: #a2544a;
+    background: transparent;
+    border: 1px solid #d7aaa2;
+    cursor: pointer;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    transition: background .2s ease, border-color .2s ease;
+}
+
+.logout-btn:hover {
+    background: #fdf5f4;
+    border-color: #a2544a;
+}

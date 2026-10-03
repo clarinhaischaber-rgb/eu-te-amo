@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conta</title>
+    <link rel="stylesheet" href="../css/conta.css">
+    <script src="../js/global.js" defer></script>
+    <script src="../js/conta.js" defer></script>
+</head>
+<body class="resource-theme">
+    <header class="site-header">
+        <nav class="navbar" aria-label="Navegação principal">
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu">
+                <span></span><span></span><span></span>
+                <span class="sr-only">Abrir menu</span>
+            </button>
+            <div class="nav-menu" id="main-menu">
+                <a class="nav-link" href="Nos.html">Nós</a>
+                <a class="nav-link" href="Joestar.html">Joestar</a>
+                <a class="nav-link" href="Caosinha.html">Caosinha</a>
+                <a class="nav-link" href="Mensagens.html">Mensagens</a>
+                <a class="nav-link" href="Codigos.html">Códigos</a>
+                <a class="nav-link" href="Desenhos.html">Desenhos</a>
+                <a class="nav-link" href="Momentos.html">Momentos</a>
+                <a class="nav-link active" href="Conta.html">Conta</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="account-page">
+        <div class="account-card">
+            <div class="account-header">
+                <span class="account-badge">Perfil Conectado</span>
+                <h1>Minha Conta</h1>
+                <p>Atualize seu nome de exibição, e-mail de acesso ou senha.</p>
+            </div>
+
+            <form id="account-form" class="account-form">
+                <label for="display-name">
+                    Nome de Exibição
+                    <input type="text" id="display-name" name="displayName" required placeholder="Ex: Joestar">
+                </label>
+
+                <label for="account-email">
+                    E-mail
+                    <input type="email" id="account-email" name="email" required placeholder="seu@email.com">
+                </label>
+
+                <label for="account-password">
+                    Nova Senha (deixe em branco para não alterar)
+                    <input type="password" id="account-password" name="password" placeholder="••••••••">
+                </label>
+
+                <button type="submit" class="account-submit-btn">Salvar Alterações</button>
+            </form>
+
+            <div class="account-divider">
+                <span>Sessão</span>
+            </div>
+
+            <button type="button" id="logout-btn" class="logout-btn">
+                Sair da Conta
+            </button>
+        </div>
+    </main>
+</body>
+</html>
