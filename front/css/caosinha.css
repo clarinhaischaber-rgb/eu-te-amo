@@ -2,7 +2,7 @@
 
 body.caosinha-theme { --theme-accent: #d886a8; --theme-line: #f0cbdc; background: #fff3f8; overflow-x: hidden; }
 body.caosinha-theme::before { 
-    position: fixed; z-index: 0; inset: 76px 0 0; opacity: .3; 
+    position: fixed; z-index: -1; inset: 76px 0 0; opacity: .3; 
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='118' height='118' viewBox='0 0 118 118'%3E%3Cg fill='none' stroke='%23d886a8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M56 42 C54 48 54 68 56 74 C58 74 62 74 64 74 C66 68 66 48 64 42 C62 40 58 40 56 42 Z'/%3E%3Cpath d='M58 41 L46 28 M62 41 L70 26'/%3E%3Cpath d='M55 46 C35 32 25 50 28 62 C31 72 45 74 50 66 C53 60 50 50 42 50 C36 50 36 58 40 60 C42 61 45 60 45 57'/%3E%3Cpath d='M65 46 C75 40 88 42 88 53 C88 58 80 60 88 65 C88 74 74 76 65 70'/%3E%3C/g%3E%3C/svg%3E"); 
     background-size: 118px 118px; content: ""; transform: rotate(12deg) scale(1.50); 
 }
