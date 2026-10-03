@@ -48,7 +48,8 @@ const GAME_CONFIG = {
             WINDUP_FRAMES: 30,   // Frames de aviso pré-ataque (tempo de reagir/dar parry)
             ACTIVE_FRAMES: 6,     // Frames onde o golpe causa dano ativo
             RECOVERY_FRAMES: 12,  // Frames de recuperação (atacante vulnerável)
-            HITBOX_RADIUS: 52,
+            HITBOX_WIDTH: 55,     // Alcance retangular pra frente
+            HITBOX_HEIGHT: 45,    // Altura da caixa do soco
             DAMAGE_UNBLOCKED: 5,
             DAMAGE_BLOCKED: 1,
             KNOCKBACK_FORCE: 15,
@@ -63,7 +64,7 @@ const GAME_CONFIG = {
         },
         TIMESTOP: {
             DURATION_FRAMES: 300,    // 5 segundos a 60 FPS
-            COUNTER_WINDOW: 90,       // Se o rival ultar em até 1.5s (90 frames), anula!
+            COUNTER_WINDOW: 30,       // Se o rival ultar em até 0.5s (30 frames), anula!
             COUNTER_FEEDBACK_FRAMES: 45,
             P1_DELAY_FRAMES: 60,      // ~1 segundo de delay para o P1 sincronizar a fala com a parada do tempo
             EXPANSION_SPEED: 28,      // Velocidade de crescimento do círculo temporal
@@ -78,7 +79,7 @@ const GAME_CONFIG = {
             name: 'Jotaro',
             displayName: 'JOTARO (P1) - [G] ULT',
             startX: 100,
-            width: 40,
+            width: 38,
             height: 64,
             speed: 4,
             jumpForce: -11,
@@ -164,7 +165,7 @@ const GAME_CONFIG = {
             name: 'Dio',
             displayName: 'OPONENTE (P2)',
             startX: 650,
-            width: 40,
+            width: 38,
             height: 64,
             speed: 4,
             jumpForce: -11,
@@ -207,6 +208,7 @@ const GAME_CONFIG = {
                 width: 60,
                 height: 18
             },
+            showAttackHitbox: false,
             spriteDisplay: {
                 sourceX: 145,
                 sourceY: 45,
@@ -395,7 +397,7 @@ class AssetLoader {
             const count = frameCounts[state] ?? 1;
             const override = spriteOverrides[state];
             const frameCount = override?.count ?? count;
-            const spriteFolder = override?.folder ?? `sprites/${folder}`;
+            const spriteFolder = override?.folder ?? `../../img/joestargame/${folder}`;
             const getFilename = override?.filename ?? ((index) => `${state}_${index}.png`);
 
             sprites[state] = Array.from({ length: frameCount }, (_, i) => {
@@ -474,8 +476,8 @@ class InputManager {
 class CityBackground {
     static create(width, height, groundY) {
         const bg = document.createElement('canvas');
-        bg.width = width;
-        bg.height = height;
+        bg.width = width || 800;
+        bg.height = height || 400;
         const b = bg.getContext('2d');
 
         let seed = 7;
@@ -671,12 +673,15 @@ class Fighter {
     }
 
     getAttackHitbox() {
-        const radius = GAME_CONFIG.COMBAT.ATTACK.HITBOX_RADIUS;
+        const hWidth = GAME_CONFIG.COMBAT.ATTACK.HITBOX_WIDTH;
+        const hHeight = GAME_CONFIG.COMBAT.ATTACK.HITBOX_HEIGHT;
+        const startY = this.y + 10;
+
         return {
-            type: 'circle',
-            x: this.x + this.width / 2,
-            y: this.y + this.height / 2,
-            radius
+            x: this.facingRight ? (this.x + this.width) : (this.x - hWidth),
+            y: startY,
+            width: hWidth,
+            height: hHeight
         };
     }
 
@@ -819,12 +824,10 @@ class Fighter {
                 const progress = 1 - (remaining / WINDUP_FRAMES);
 
                 ctx.fillStyle = `rgba(231, 76, 60, ${0.15 + progress * 0.4})`;
-                ctx.beginPath();
-                ctx.arc(attackBox.x, attackBox.y, attackBox.radius, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.fillRect(attackBox.x, attackBox.y, attackBox.width, attackBox.height);
                 ctx.strokeStyle = '#e74c3c';
                 ctx.lineWidth = 2;
-                ctx.stroke();
+                ctx.strokeRect(attackBox.x, attackBox.y, attackBox.width, attackBox.height);
 
                 // Exclamação piscando acima da cabeça avisando o parry
                 if (Math.floor(globalFrameCount / 4) % 2 === 0) {
@@ -834,9 +837,7 @@ class Fighter {
                 }
             } else if (phase === 'active') {
                 ctx.fillStyle = '#e74c3c';
-                ctx.beginPath();
-                ctx.arc(attackBox.x, attackBox.y, attackBox.radius, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.fillRect(attackBox.x, attackBox.y, attackBox.width, attackBox.height);
             }
         }
 
@@ -861,7 +862,7 @@ class Projectile {
         this.height = height;
         this.sprite = options.sprite ?? owner.sprites?.knife?.[0];
         this.spriteDisplay = options.spriteDisplay ?? owner.config.projectileDisplay;
-        this.processedSprite = null;
+        this.cachedSprite = null;
         this.angle = options.angle ?? (vx >= 0 ? Math.PI : 0);
         this.damage = options.damage ?? owner.config.ai?.knifeDamage ?? 0;
         this.isUltimateKnife = options.isUltimateKnife ?? false;
@@ -869,7 +870,7 @@ class Projectile {
     }
 
     getRenderableSprite() {
-        if (this.processedSprite) return this.processedSprite;
+        if (this.cachedSprite) return this.cachedSprite;
         if (!this.sprite || !this.sprite.complete || this.sprite.naturalWidth === 0) return null;
 
         const display = this.spriteDisplay;
@@ -891,7 +892,7 @@ class Projectile {
             display.sourceHeight
         );
 
-        this.processedSprite = canvas;
+        this.cachedSprite = canvas;
         return canvas;
     }
 
@@ -923,14 +924,6 @@ class Projectile {
 // ============================================================================
 class CombatSystem {
     static checkCollision(rect1, rect2) {
-        if (rect1.type === 'circle') {
-            const closestX = Math.max(rect2.x, Math.min(rect1.x, rect2.x + rect2.width));
-            const closestY = Math.max(rect2.y, Math.min(rect1.y, rect2.y + rect2.height));
-            const distanceX = rect1.x - closestX;
-            const distanceY = rect1.y - closestY;
-            return distanceX * distanceX + distanceY * distanceY <= rect1.radius * rect1.radius;
-        }
-
         return (
             rect1.x < rect2.x + rect2.width &&
             rect1.x + rect1.width > rect2.x &&
@@ -989,6 +982,8 @@ class CombatSystem {
                 p.update();
             }
 
+            // Se o tempo estiver parado para o oponente, o projétil não causa dano durante o Za Warudo
+            if (timeStopOwner !== null && timeStopOwner !== p.owner.id) continue;
             if (timeStopOwner !== null && p.frozenUntilTimeStopEnds) continue;
 
             if (this.checkCollision(p.getBox(), target.getHurtbox())) {
@@ -1083,16 +1078,16 @@ class JoestarGame {
         this.ctx = this.canvas.getContext('2d');
         this.ctx.imageSmoothingEnabled = false;
         this.effectCanvas = document.createElement('canvas');
-        this.effectCanvas.width = this.canvas.width;
-        this.effectCanvas.height = this.canvas.height;
+        this.effectCanvas.width = this.canvas.width || 800;
+        this.effectCanvas.height = this.canvas.height || 400;
         this.effectCtx = this.effectCanvas.getContext('2d');
 
         this.soundManager = new SoundManager(GAME_CONFIG.AUDIO);
         this.inputManager = new InputManager(GAME_CONFIG.CONTROLS);
 
         this.cityBg = CityBackground.create(
-            this.canvas.width,
-            this.canvas.height,
+            this.canvas.width || 800,
+            this.canvas.height || 400,
             GAME_CONFIG.WORLD.GROUND_Y
         );
 
@@ -1117,7 +1112,7 @@ class JoestarGame {
         // Estado do Jogo
         this.gameOver = false;
         this.isPaused = false;
-        this.gameStarted = false;
+        this.gameStarted = true;
         this.hasPaused = false;
         this.pendingFullscreenResume = false;
         this.winnerMessage = '';
@@ -1221,7 +1216,9 @@ class JoestarGame {
                 this.toggleFullscreen();
                 this.gameStarted = true;
                 this.soundManager.resumeBgm();
-                this.canvas.parentElement.parentElement.classList.add('game-started');
+                if (this.canvas.parentElement && this.canvas.parentElement.parentElement) {
+                    this.canvas.parentElement.parentElement.classList.add('game-started');
+                }
             });
         }
 
@@ -1258,11 +1255,15 @@ class JoestarGame {
             const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement);
             if (isFull && this.pendingFullscreenResume) {
                 this.pendingFullscreenResume = false;
-                this.canvas.parentElement.parentElement.classList.remove('paused-outside');
+                if (this.canvas.parentElement && this.canvas.parentElement.parentElement) {
+                    this.canvas.parentElement.parentElement.classList.remove('paused-outside');
+                }
                 if (this.isPaused) this.togglePause();
             } else if (!isFull && this.gameStarted) {
                 if (!this.isPaused) this.togglePause();
-                this.canvas.parentElement.parentElement.classList.add('paused-outside');
+                if (this.canvas.parentElement && this.canvas.parentElement.parentElement) {
+                    this.canvas.parentElement.parentElement.classList.add('paused-outside');
+                }
             }
         };
         document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -1365,9 +1366,9 @@ class JoestarGame {
         this.isPaused = !this.isPaused;
         if (this.isPaused) {
             this.hasPaused = true;
-            this.canvas.parentElement.parentElement.classList.add('has-restart');
-        }
-        if (this.isPaused) {
+            if (this.canvas.parentElement && this.canvas.parentElement.parentElement) {
+                this.canvas.parentElement.parentElement.classList.add('has-restart');
+            }
             this.soundManager.pauseBgm();
         } else {
             this.soundManager.resumeBgm();
@@ -1392,6 +1393,14 @@ class JoestarGame {
 
     triggerUltimate(fighter) {
         if (fighter.ultCharge < fighter.maxUlt) return;
+
+        // Se o P2 já usou a ult e passou da janela de 0.5s (30 frames), o P1 NÃO pode ultar!
+        if (this.timeStopOwner === 'p2') {
+            const timeDiff = this.globalFrameCount - this.timeStopCancelTimer;
+            if (timeDiff > GAME_CONFIG.COMBAT.TIMESTOP.COUNTER_WINDOW) {
+                return;
+            }
+        }
 
         // Evita disparar novamente se já estiver na contagem regressiva da ult
         if (this.pendingUlt && this.pendingUlt.fighter.id === fighter.id) return;
@@ -1418,6 +1427,13 @@ class JoestarGame {
 
     activateTimeStop(fighter) {
         const timestopCfg = GAME_CONFIG.COMBAT.TIMESTOP;
+
+        // Se o P1 ativou a ult, cancela/remove APENAS as facas especiais da ult do Dio (isUltimateKnife)
+        // As facas normais do P2 continuam existindo e congeladas no ar!
+        if (fighter.id === 'p1') {
+            this.projectiles = this.projectiles.filter(p => !p.isUltimateKnife);
+            this.ultimateKnivesSpawned = false;
+        }
 
         // Se o outro personagem já ativou a ult recentemente, anula!
         if (this.timeStopOwner && this.timeStopOwner !== fighter.id) {

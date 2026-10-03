@@ -1,0 +1,7 @@
+@import url('./base.css');
+
+.drawing-board { display: grid; place-items: center; max-width: 760px; min-height: 360px; background-color: #fff; background-image: linear-gradient(#eceae5 1px, transparent 1px), linear-gradient(90deg, #eceae5 1px, transparent 1px); background-size: 28px 28px; border: 1px solid var(--line); color: var(--gray); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+
+@media (max-width: 720px) {
+    .drawing-board { min-height: 280px; }
+}

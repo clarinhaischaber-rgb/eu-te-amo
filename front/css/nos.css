@@ -1,0 +1,44 @@
+@import url('./base.css');
+
+body.nos-theme { background: #F0EBE0; }
+.nos-theme .site-header { background: rgba(240, 235, 224, .94); border-color: #d8cfbf; }
+
+.main-banner { position: relative; z-index: 1; width: 100%; padding-top: 78px; } 
+.main-banner img { display: block; width: 100%; max-height: 430px; object-fit: cover; }
+
+.home-placeholder { display: grid; place-items: center; min-height: auto; padding: 42px 24px 60px; text-align: center; background: #F0EBE0; }
+.home-placeholder h1 { margin: 0; font-size: clamp(36px, 6vw, 76px); font-weight: 400; letter-spacing: -.07em; }
+.relationship-time { max-width: 760px; margin: 0; color: var(--accent); font-size: clamp(22px, 3vw, 36px); line-height: 1.4; }
+
+.gallery-section { max-width: 1120px; margin: auto; padding: 34px 34px 80px; border-bottom: 1px solid #d8cfbf; background: #F0EBE0; }
+.gallery-section .section-heading { margin-bottom: 38px; }
+.section-heading h2 { margin: 0 0 14px; font-size: clamp(32px, 5vw, 58px); font-weight: 400; letter-spacing: -.06em; }
+.section-heading p { max-width: 420px; margin: 0; color: var(--gray); font-size: 14px; line-height: 1.7; }
+
+.gallery-actions { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+.add-photo-button { min-height: 42px; padding: 0 17px; color: #fff; background: var(--black); border: 1px solid var(--black); cursor: pointer; font: inherit; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.gallery-status { color: var(--gray); font-size: 12px; }
+
+.photo-gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.gallery-item { margin: 0; background: #F0EBE0; border: 1px solid #d8cfbf; cursor: pointer; outline: none; transition: border-color .2s, transform .2s; }
+.gallery-item:hover, .gallery-item:focus, .gallery-item.selected { border-color: var(--accent); transform: translateY(-2px); }
+.gallery-item img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+.empty-gallery { margin: 0; color: var(--gray); font-size: 13px; }
+
+.delete-confirmation { position: fixed; z-index: 20; inset: 0; display: grid; place-items: center; padding: 24px; background: rgba(24, 24, 24, .45); }
+.delete-confirmation[hidden] { display: none; }
+.delete-dialog { width: min(100%, 380px); padding: 28px; background: #fff; border: 1px solid var(--line); box-shadow: 0 18px 50px rgba(24, 24, 24, .2); }
+.delete-dialog h3 { margin: 0 0 24px; font-size: 20px; font-weight: 400; }
+.delete-dialog-actions { display: flex; justify-content: end; gap: 10px; }
+.delete-dialog-actions button { min-height: 42px; padding: 0 17px; cursor: pointer; font: inherit; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.delete-dialog-actions button:first-child { color: #fff; background: #a2544a; border: 1px solid #a2544a; }
+.delete-dialog-actions button:last-child { color: var(--black); background: transparent; border: 1px solid var(--black); }
+
+@media (max-width: 720px) {
+    .main-banner { padding-top: 66px; }
+    .gallery-section { padding: 30px 22px 60px; }
+    .photo-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+    .photo-gallery { grid-template-columns: 1fr; }
+}

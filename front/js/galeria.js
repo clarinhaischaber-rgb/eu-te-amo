@@ -1,8 +1,3 @@
-const menuButton = document.querySelector('.menu-toggle');
-const menu = document.querySelector('.nav-menu');
-const navLinks = document.querySelectorAll('.nav-link');
-const relationshipTime = document.querySelector('#relationship-time span');
-const relationshipStartDate = new Date('2026-09-11T00:00:00');
 const photoGallery = document.querySelector('#photo-gallery');
 const photoInput = document.querySelector('#photo-input');
 const addPhotoButton = document.querySelector('#add-photo-button');
@@ -15,65 +10,6 @@ const photosEndpoint = 'https://eu-te-amo-spjs.onrender.com/api/fotos';
 const photosIdsEndpoint = 'https://eu-te-amo-spjs.onrender.com/api/fotos/ids';
 const PHOTOS_CACHE_KEY = 'cached_photos';
 let selectedPhotoId = null;
-
-function updateRelationshipTime() {
-    if (!relationshipTime) {
-        return;
-    }
-
-    const now = new Date();
-    const start = new Date(relationshipStartDate);
-
-    let years = now.getFullYear() - start.getFullYear();
-    let months = now.getMonth() - start.getMonth();
-    let days = now.getDate() - start.getDate();
-
-    if (days < 0) {
-        const previousMonthDays = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
-        days += previousMonthDays;
-        months -= 1;
-    }
-
-    if (months < 0) {
-        years -= 1;
-        months += 12;
-    }
-
-    if (years < 0) {
-        years = 0;
-        months = 0;
-        days = 0;
-    }
-
-    const formatUnit = (value, singular, plural) => `${value} ${value === 1 ? singular : plural}`;
-
-    if (years > 0) {
-        relationshipTime.textContent = `${formatUnit(years, 'ano', 'anos')}, ${formatUnit(months, 'mês', 'meses')} e ${formatUnit(days, 'dia', 'dias')}`;
-    } else if (months > 0) {
-        relationshipTime.textContent = `${formatUnit(months, 'mês', 'meses')} e ${formatUnit(days, 'dia', 'dias')}`;
-    } else {
-        relationshipTime.textContent = formatUnit(days, 'dia', 'dias');
-    }
-}
-
-updateRelationshipTime();
-setInterval(updateRelationshipTime, 60000);
-
-if (menuButton) {
-    menuButton.addEventListener('click', () => {
-        const isOpen = menu.classList.toggle('open');
-        menuButton.setAttribute('aria-expanded', String(isOpen));
-    });
-}
-
-navLinks.forEach((link) => {
-    link.addEventListener('click', () => {
-        menu.classList.remove('open');
-        menuButton.setAttribute('aria-expanded', 'false');
-        navLinks.forEach((item) => item.classList.remove('active'));
-        link.classList.add('active');
-    });
-});
 
 function setGalleryStatus(message) {
     if (galleryStatus) {
@@ -241,7 +177,6 @@ function compressImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
     });
 }
 
-// Otimizado: Comprime todas e envia em um ÚNICO lote via POST
 async function uploadPhotos(files) {
     const rawFiles = Array.from(files || []).filter((file) => file.type.startsWith('image/'));
     if (rawFiles.length === 0) {
