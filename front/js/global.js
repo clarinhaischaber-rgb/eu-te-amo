@@ -11,7 +11,7 @@ function saveToken(token) {
 
 function logout() {
     localStorage.removeItem("token");
-    window.location.href = "Login.html";
+    window.location.href = "login.html";
 }
 
 function getAuthHeaders() {
@@ -24,7 +24,7 @@ function getAuthHeaders() {
 
 function checkAuth() {
     if (!getToken()) {
-        window.location.href = "Login.html";
+        window.location.href = "login.html";
     }
 }
 
