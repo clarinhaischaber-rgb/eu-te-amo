@@ -851,6 +851,7 @@ class Fighter {
         }
     }
 }
+
 class Projectile {
     constructor(x, y, vx, owner, width = 15, height = 5, options = {}) {
         this.x = x;
@@ -1109,10 +1110,10 @@ class JoestarGame {
 
         this.projectiles = [];
 
-        // Estado do Jogo
+        // Estado do Jogo (O JOGO COMEÇA PAUSADO/DESLIGADO POR PADRÃO!)
         this.gameOver = false;
         this.isPaused = false;
-        this.gameStarted = true;
+        this.gameStarted = false; // <-- CORRIGIDO: Inicia como false
         this.hasPaused = false;
         this.pendingFullscreenResume = false;
         this.winnerMessage = '';
@@ -1136,6 +1137,14 @@ class JoestarGame {
 
     setupEventListeners() {
         window.addEventListener('keydown', (e) => {
+            // Tecla de Início do Jogo (Se o jogo ainda não tiver começado)
+            if (!this.gameStarted) {
+                if (e.code === 'Enter') {
+                    this.startGame();
+                }
+                return;
+            }
+
             const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement);
 
             // Alternar Pause (ESC)
@@ -1182,8 +1191,23 @@ class JoestarGame {
         });
     }
 
+    startGame() {
+        if (this.gameStarted) return;
+        this.gameStarted = true;
+        this.soundManager.resumeBgm();
+        
+        const startOverlay = document.getElementById('start-overlay');
+        if (startOverlay) {
+            startOverlay.style.display = 'none';
+        }
+
+        if (this.canvas.parentElement && this.canvas.parentElement.parentElement) {
+            this.canvas.parentElement.parentElement.classList.add('game-started');
+        }
+    }
+
     setupUIControls() {
-        // Função auxiliar para vincular eventos touch e mouse com prevenção de scroll/zoom
+        // Função para prevenir do mouse dar scroll ou zoom e auxiliar tbm no mobile (touch)
         const bindBtn = (id, onDown, onUp) => {
             const btn = document.getElementById(id);
             if (!btn) return;
@@ -1214,11 +1238,7 @@ class JoestarGame {
             btnStartGame.addEventListener('click', (e) => {
                 e.preventDefault();
                 this.toggleFullscreen();
-                this.gameStarted = true;
-                this.soundManager.resumeBgm();
-                if (this.canvas.parentElement && this.canvas.parentElement.parentElement) {
-                    this.canvas.parentElement.parentElement.classList.add('game-started');
-                }
+                this.startGame();
             });
         }
 
@@ -1231,7 +1251,7 @@ class JoestarGame {
             });
         }
 
-        // --- BOTÃO DE TELA CHEIA ---
+        // BOTÃO DE TELA CHEIA
         const btnFullscreen = document.getElementById('btnFullscreen');
         if (btnFullscreen) {
             btnFullscreen.addEventListener('click', (e) => {
@@ -1269,16 +1289,16 @@ class JoestarGame {
         document.addEventListener('fullscreenchange', handleFullscreenChange);
         document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 
-        // --- BOTÃO DE PAUSE ---
+        // BOTÃO DE PAUSE
         const btnPause = document.getElementById('btnPause');
         if (btnPause) {
             btnPause.addEventListener('click', (e) => {
                 e.preventDefault();
-                if (!this.gameOver) this.togglePause();
+                if (!this.gameOver && this.gameStarted) this.togglePause(); // so pausa se o jogo nao acabou e se o jogo iniciou!!
             });
         }
 
-        // --- BOTÃO DE JOGAR DE NOVO / REINICIAR ---
+        // BOTÃO DE REINICIAR
         const btnRestart = document.getElementById('btnRestart');
         if (btnRestart) {
             btnRestart.addEventListener('click', (e) => {
@@ -1287,7 +1307,7 @@ class JoestarGame {
             });
         }
 
-        // --- CONTROLES MOBILE / TOUCH ---
+        // CONTROLES MOBILE / TOUCH
         // Movimentação Esquerda / Direita
         bindBtn('btnLeft',
             () => this.inputManager.setVirtual('MOVE_LEFT', true),
@@ -1302,7 +1322,7 @@ class JoestarGame {
         // Pulo
         bindBtn('btnJump',
             () => {
-                if (!this.gameOver && !this.isPaused) {
+                if (this.gameStarted && !this.gameOver && !this.isPaused) {
                     this.player1.jump(this.soundManager);
                 }
             }
@@ -1311,7 +1331,7 @@ class JoestarGame {
         // Bloqueio / Parry
         bindBtn('btnBlock',
             () => {
-                if (!this.gameOver && !this.isPaused) {
+                if (this.gameStarted && !this.gameOver && !this.isPaused) {
                     this.player1.startBlock();
                 }
             },
@@ -1323,7 +1343,7 @@ class JoestarGame {
         // Golpe / Ataque
         bindBtn('btnAttack',
             () => {
-                if (!this.gameOver && !this.isPaused) {
+                if (this.gameStarted && !this.gameOver && !this.isPaused) {
                     this.beginAttack(this.player1);
                 }
             }
@@ -1332,7 +1352,7 @@ class JoestarGame {
         // Ultimate (Za Warudo)
         bindBtn('btnUlt',
             () => {
-                if (!this.gameOver && !this.isPaused) {
+                if (this.gameStarted && !this.gameOver && !this.isPaused) {
                     this.triggerUltimate(this.player1);
                 }
             }
@@ -1547,6 +1567,7 @@ class JoestarGame {
         this.gameOver = false;
         this.isPaused = false;
         this.winnerMessage = '';
+        this.gameStarted = true;
     }
 
     update() {
@@ -1595,7 +1616,7 @@ class JoestarGame {
             this.beginAttack(this.player1);
         }
 
-        // --- ATUALIZAÇÃO DO PLAYER 1 ---
+        // Atualização do PLAYER 1
         if (this.timeStopOwner !== 'p2') {
             let isMovingP1 = false;
             if (this.player1.canAct()) {
@@ -1618,7 +1639,7 @@ class JoestarGame {
             this.player1.updateAnimation(isMovingP1);
         }
 
-        // --- ATUALIZAÇÃO DO PLAYER 2 (IA) ---
+        // Atualização do PLAYER 2 (IA)
         if (this.timeStopOwner !== 'p1') {
             const prevX = this.player2.x;
             const p2IsUsingUltimate = this.pendingUlt?.fighter.id === 'p2' || this.timeStopOwner === 'p2';
@@ -1762,12 +1783,12 @@ class JoestarGame {
         // Interface do Usuário (HUD)
         this.drawHUD();
 
-        // Telas de Overlay (Pause e Game Over)
-        if (this.isPaused && !this.gameOver) {
+        // Tela Inicial / Overlay antes de começar
+        if (!this.gameStarted) {
+            this.drawOverlay('JOESTAR GAME', 'Clique em "Iniciar Jogo" ', 0.8);
+        } else if (this.isPaused && !this.gameOver) {
             this.drawOverlay('PAUSADO', 'Pressione ESC para continuar', 0.6);
-        }
-
-        if (this.gameOver) {
+        } else if (this.gameOver) {
             this.drawOverlay(this.winnerMessage, 'Pressione R para reiniciar', 0.85);
         }
     }
