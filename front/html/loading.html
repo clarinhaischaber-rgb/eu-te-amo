@@ -16,16 +16,20 @@
             background-color: #121116;
             color: #ffffff;
             font-family: sans-serif;
+            overflow: hidden;
         }
         .splash-container {
             text-align: center;
-            max-width: 360px;
-            width: 85%;
-            padding: 2.5rem 2rem;
+            max-width: 420px;
+            width: 90%;
+            padding: 2rem 1.5rem;
             background: #1e1b26;
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             border: 1px solid #2d2838;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .progress-bar-bg {
             width: 100%;
@@ -33,7 +37,7 @@
             background: #2d2838;
             border-radius: 4px;
             overflow: hidden;
-            margin: 1.5rem 0 0.8rem 0;
+            margin: 1.2rem 0 0.5rem 0;
         }
         .progress-bar-fill {
             height: 100%;
@@ -44,7 +48,16 @@
         .status-text {
             font-size: 0.85rem;
             opacity: 0.8;
-            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        #dino-game {
+            background: #15131c;
+            border: 1px solid #2d2838;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 360px;
+            touch-action: manipulation;
         }
     </style>
     <script src="../js/global.js" defer></script>
