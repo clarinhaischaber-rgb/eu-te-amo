@@ -59,17 +59,21 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
 
                 // LEITURA PÚBLICA (Qualquer pessoa pode ver fotos e cartas)
-                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/fotos/**").permitAll()
-                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/cartas/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/fotos/**").permitAll()// podem ver fotos
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/cartas/**").permitAll()// podem ver cartas
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/desenhos/**").permitAll()// podem ver desenhos
 
                 // MODIFICAÇÕES (Exigem login com token JWT)
-                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/fotos/**").authenticated()
-                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/fotos/**").authenticated()
-                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/fotos/**").authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/fotos/**").authenticated()//publicar foto
+                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/fotos/**").authenticated()//editar foto
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/fotos/**").authenticated()// deletar foto
 
-                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/cartas/**").authenticated()
-                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/cartas/**").authenticated()
-                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/cartas/**").authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/cartas/**").authenticated()// criar carta
+                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/cartas/**").authenticated()// editar carta
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/cartas/**").authenticated()// excluir carta
+
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/desenhos/**").authenticated()// criar desenho
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/desenhos/**").authenticated()// excluir desenho
 
                 .anyRequest().authenticated()
             )
