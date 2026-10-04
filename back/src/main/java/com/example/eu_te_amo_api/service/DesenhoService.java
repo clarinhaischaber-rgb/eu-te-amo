@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -46,16 +47,23 @@ public class DesenhoService {
 
     /**
      * Faz o upload da imagem do desenho para o Cloudinary e salva os metadados no banco.
+     * Define um public_id único baseado em UUID para evitar colisões e sobrescritas.
      */
     public DesenhoResponseDTO salvar(MultipartFile file, String titulo) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("O arquivo de imagem do desenho é obrigatório.");
         }
 
-        // Upload do arquivo PNG do Canvas para o Cloudinary sob a pasta 'desenhos'
+        // Geração de um identificador único exclusivo para cada imagem do desenho
+        String publicIdUnico = "desenhos/desenho_" + UUID.randomUUID();
+
+        // Upload do arquivo do Canvas para o Cloudinary especificando o public_id único
         Map<?, ?> uploadResult = cloudinary.uploader().upload(
                 file.getBytes(),
-                ObjectUtils.asMap("folder", "desenhos")
+                ObjectUtils.asMap(
+                        "public_id", publicIdUnico,
+                        "overwrite", true
+                )
         );
 
         String url = (String) uploadResult.get("secure_url");
@@ -79,7 +87,7 @@ public class DesenhoService {
         Desenho desenho = desenhoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Desenho não encontrado com o ID: " + id));
 
-        // Exclui a imagem do armazenamento do Cloudinary usando o public_id registrado
+        // Exclui a imagem do armazenamento do Cloudinary usando o public_id único registrado
         cloudinary.uploader().destroy(desenho.getPublicId(), ObjectUtils.emptyMap());
 
         // Remove o registro da tabela

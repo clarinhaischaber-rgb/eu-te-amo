@@ -51,12 +51,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**
-     * Remove desenhos duplicados com base no publicId ou ID.
+     * Remove desenhos duplicados com base no ID único do banco de dados (desenho.id).
+     * Corrigido para garantir que registros com publicIds idênticos não sejam descartados.
      */
     function uniqueDesenhos(desenhos) {
         const seen = new Set();
         return desenhos.filter((desenho) => {
-            const key = desenho.publicId || desenho.id;
+            // Utiliza estritamente o id numérico único como chave de desduplicação
+            const key = desenho.id;
             if (!key || seen.has(key)) {
                 return false;
             }
