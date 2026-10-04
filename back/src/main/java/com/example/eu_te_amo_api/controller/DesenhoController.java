@@ -24,7 +24,7 @@ public class DesenhoController {
     }
 
     /**
-     * Endpoint público para listar todos os desenhos salvos (Acessível por Visitantes e Logados).
+     * Endpoint público para listar todos os desenhos salvos com informações completas.
      */
     @GetMapping
     public ResponseEntity<List<DesenhoResponseDTO>> listarTodos() {
@@ -33,7 +33,16 @@ public class DesenhoController {
     }
 
     /**
-     * Endpoint protegido para criar e salvar um novo desenho enviando imagem multipart/form-data.
+     * Endpoint público para retornar apenas a lista de IDs dos desenhos para verificação leve de cache no cliente.
+     */
+    @GetMapping("/ids")
+    public ResponseEntity<List<Long>> listarTodosIds() {
+        List<Long> ids = desenhoService.listarTodosIds();
+        return ResponseEntity.ok(ids);
+    }
+
+    /**
+     * Endpoint protegido para criar e salvar um novo desenho.
      */
     @PostMapping
     public ResponseEntity<DesenhoResponseDTO> salvar(
@@ -44,7 +53,7 @@ public class DesenhoController {
     }
 
     /**
-     * Endpoint protegido para deletar um desenho existente por seu ID.
+     * Endpoint protegido para deletar um desenho existente por ID.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) throws IOException {

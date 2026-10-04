@@ -14,8 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Camada de serviço responsável pelas regras de negócio dos desenhos,
- * integrando upload/exclusão de mídia no Cloudinary e persistência no banco.
+ * Camada de serviço responsável pelas regras de negócio dos desenhos.
  */
 @Service
 public class DesenhoService {
@@ -36,6 +35,13 @@ public class DesenhoService {
                 .stream()
                 .map(DesenhoResponseDTO::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Retorna apenas a lista de IDs de todos os desenhos para validação leve de cache no frontend.
+     */
+    public List<Long> listarTodosIds() {
+        return desenhoRepository.findAllIds();
     }
 
     /**
@@ -67,7 +73,7 @@ public class DesenhoService {
     }
 
     /**
-     * Remove a imagem hospedada no Cloudinary e deleta o registro correspondente do banco.
+     * Remove a imagem do Cloudinary e deleta o registro no banco.
      */
     public void deletar(Long id) throws IOException {
         Desenho desenho = desenhoRepository.findById(id)

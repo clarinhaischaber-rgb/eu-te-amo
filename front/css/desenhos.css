@@ -1,7 +1,208 @@
 @import url('./base.css');
 
-.drawing-board { display: grid; place-items: center; max-width: 760px; min-height: 360px; background-color: #fff; background-image: linear-gradient(#eceae5 1px, transparent 1px), linear-gradient(90deg, #eceae5 1px, transparent 1px); background-size: 28px 28px; border: 1px solid var(--line); color: var(--gray); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.hidden {
+    display: none !important;
+}
+
+/* Mensagem de Status da Galeria */
+.desenho-status-msg {
+    margin: -35px 0 25px;
+    font-size: 13px;
+    letter-spacing: .05em;
+    color: var(--gray);
+    min-height: 20px;
+}
+
+/* Área do Canvas e Ferramentas */
+.drawing-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 760px;
+    margin-bottom: 50px;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid var(--line);
+}
+
+.drawing-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--gray);
+}
+
+.tool-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tool-item input[type="color"] {
+    border: 1px solid var(--line);
+    background: transparent;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+}
+
+.tool-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-tool {
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--black);
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.btn-tool:hover, .btn-tool.active {
+    background: var(--black);
+    color: #fff;
+    border-color: var(--black);
+}
+
+.btn-tool.btn-danger:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+.drawing-board-canvas {
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    background-color: #ffffff;
+    border: 1px solid var(--line);
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.drawing-save-bar {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.drawing-save-bar input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    background: var(--soft);
+    color: var(--black);
+    font-family: var(--sans);
+    font-size: 13px;
+}
+
+.btn-save {
+    padding: 10px 20px;
+    background: var(--black);
+    color: #fff;
+    border: none;
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity .2s ease;
+}
+
+.btn-save:hover {
+    opacity: 0.85;
+}
+
+.btn-save:disabled {
+    background: var(--gray);
+    cursor: not-allowed;
+}
+
+/* Galeria de Desenhos */
+.gallery-section {
+    max-width: 760px;
+    margin-top: 20px;
+}
+
+.gallery-title {
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    letter-spacing: -.02em;
+    color: var(--black);
+}
+
+.desenhos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.card-desenho {
+    background: #fff;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-desenho img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    background: #ffffff;
+    border-bottom: 1px solid var(--line);
+}
+
+.card-info {
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-info span {
+    font-size: 13px;
+    color: var(--black);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btn-delete {
+    background: transparent;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 11px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    padding: 2px 4px;
+}
+
+.btn-delete:hover {
+    text-decoration: underline;
+}
 
 @media (max-width: 720px) {
-    .drawing-board { min-height: 280px; }
+    .drawing-container {
+        padding: 14px;
+    }
+    
+    .drawing-save-bar {
+        flex-direction: column;
+    }
 }

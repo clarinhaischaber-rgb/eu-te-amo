@@ -27,16 +27,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 1500);
 
     try {
-        // 1. Tenta "acordar" a API e faz o pré-carregamento dos dados em paralelo
-        const [cartasRes, fotosRes] = await Promise.all([
+        // 1. Tenta "acordar" a API e faz o pré-carregamento dos dados em paralelo (Cartas, Fotos e Desenhos)
+        const [cartasRes, fotosRes, desenhosRes] = await Promise.all([
             fetch(`${API_URL}/cartas`),
-            fetch(`${API_URL}/fotos`)
+            fetch(`${API_URL}/fotos`),
+            fetch(`${API_URL}/desenhos`)
         ]);
 
         clearTimeout(slowTimer);
         if (progressInterval) clearInterval(progressInterval);
 
-        // 2. Guarda fotos em cache no localStorage
+        // 2. Processa as respostas e armazena mídias em cache no localStorage
         if (cartasRes.ok) {
             const cartas = await cartasRes.json();
         }
@@ -44,6 +45,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (fotosRes.ok) {
             const fotos = await fotosRes.json();
             localStorage.setItem("cached_photos", JSON.stringify(fotos));
+        }
+
+        // Pré-carregamento e armazenamento em cache dos desenhos salvos
+        if (desenhosRes.ok) {
+            const desenhos = await desenhosRes.json();
+            localStorage.setItem("cached_desenhos", JSON.stringify(desenhos));
         }
 
         // Completa o carregamento

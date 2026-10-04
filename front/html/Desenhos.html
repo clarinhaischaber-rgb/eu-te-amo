@@ -7,27 +7,73 @@
     <title>Desenhos</title>
     <link rel="stylesheet" href="../css/desenhos.css">
     <script src="../js/global.js" defer></script>
+    <script src="../js/desenhos.js" defer></script>
 </head>
 
 <body class="resource-theme">
     <header class="site-header">
-        <nav class="navbar" aria-label="Navegação principal"><button class="menu-toggle" type="button"
-                aria-expanded="false" aria-controls="main-menu"><span></span><span></span><span></span><span
-                    class="sr-only">Abrir menu</span></button>
-            <div class="nav-menu" id="main-menu"><a class="nav-link" href="Nos.html">Nós</a><a class="nav-link"
-                    href="Joestar.html">Joestar</a><a class="nav-link" href="Caosinha.html">Caosinha</a><a
-                    class="nav-link" href="Mensagens.html">Mensagens</a><a class="nav-link"
-                    href="Codigos.html">Códigos</a><a class="nav-link active" href="Desenhos.html">Desenhos</a><a
-                    class="nav-link" href="Momentos.html">Momentos</a>
-                    <a class="nav-link " href="Conta.html">Conta</a></div>
+        <nav class="navbar" aria-label="Navegação principal">
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu">
+                <span></span><span></span><span></span>
+                <span class="sr-only">Abrir menu</span>
+            </button>
+            <div class="nav-menu" id="main-menu">
+                <a class="nav-link" href="Nos.html">Nós</a>
+                <a class="nav-link" href="Joestar.html">Joestar</a>
+                <a class="nav-link" href="Caosinha.html">Caosinha</a>
+                <a class="nav-link" href="Mensagens.html">Mensagens</a>
+                <a class="nav-link" href="Codigos.html">Códigos</a>
+                <a class="nav-link active" href="Desenhos.html">Desenhos</a>
+                <a class="nav-link" href="Momentos.html">Momentos</a>
+                <a class="nav-link" href="Conta.html">Conta</a>
+            </div>
         </nav>
     </header>
+
     <main class="resource-page">
         <p class="eyebrow">Galeria para criar</p>
         <h1>Desenhos</h1>
         <p class="resource-intro">Um quadro em branco para desenhar, salvar e organizar as nossas criações.</p>
-        <div class="drawing-board" aria-label="Quadro de desenhos vazio"><span>Seu próximo desenho começa aqui</span>
-        </div>
+
+        <!-- Área de Status da Operação (Exibe progresso e erros amigáveis) -->
+        <p id="desenho-status" class="desenho-status-msg" aria-live="polite"></p>
+
+        <!-- Seção do Canvas para Criação (Oculta para visitantes) -->
+        <section id="secao-criacao" class="drawing-container hidden">
+            <div class="drawing-toolbar">
+                <div class="tool-item">
+                    <label for="color-picker">Cor:</label>
+                    <input type="color" id="color-picker" value="#181818">
+                </div>
+
+                <div class="tool-item">
+                    <label for="brush-size">Espessura:</label>
+                    <input type="range" id="brush-size" min="1" max="50" value="5">
+                    <span id="brush-size-val">5px</span>
+                </div>
+
+                <div class="tool-buttons">
+                    <button type="button" id="btn-pincel" class="btn-tool active">Pincel</button>
+                    <button type="button" id="btn-borracha" class="btn-tool">Borracha</button>
+                    <button type="button" id="btn-limpar" class="btn-tool btn-danger">Limpar Quadro</button>
+                </div>
+            </div>
+
+            <canvas id="canvas-desenho" width="760" height="400" class="drawing-board-canvas"></canvas>
+
+            <div class="drawing-save-bar">
+                <input type="text" id="input-titulo" placeholder="Título do desenho (opcional)" maxlength="50">
+                <button type="button" id="btn-salvar" class="btn-save">Salvar Desenho</button>
+            </div>
+        </section>
+
+        <!-- Galeria de Desenhos Salvos (Acessível a todos) -->
+        <section class="gallery-section">
+            <h2 class="gallery-title">Nossas Criações</h2>
+            <div id="grid-desenhos" class="desenhos-grid">
+                <!-- Cards renderizados dinamicamente pelo JS -->
+            </div>
+        </section>
     </main>
 </body>
 
