@@ -2,7 +2,7 @@
 package com.example.eu_te_amo_api.config;
 
 import com.example.eu_te_amo_api.service.JwtService;
-
+import org.springframework.context.annotation.Lazy;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public JwtAuthenticationFilter(
             JwtService jwtService,
-            UserDetailsService userDetailsService
+            @Lazy UserDetailsService userDetailsService
     ) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
