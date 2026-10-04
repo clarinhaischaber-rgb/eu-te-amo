@@ -38,8 +38,9 @@ public class AuthService {
         });
 
         userRepository.findByEmail("clarinha.ischaber@icloud.com").ifPresent(user -> {
-            user.setPassword(passwordEncoder.encode("Iamthecaosinhapolar"));
-            userRepository.save(user);
+                user.setDisplayName("Iamthecaosinhapolar"); // Nome de exibição
+                user.setPassword(passwordEncoder.encode("Teoryofchaos2267")); // Senha real
+                userRepository.save(user);
         });
     }
 
