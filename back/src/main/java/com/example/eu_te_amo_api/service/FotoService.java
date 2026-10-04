@@ -32,8 +32,6 @@ public class FotoService {
 
     @Transactional(readOnly = true)
     public List<Foto> listarTodas() {
-        // REMOVIDO: chamadas automáticas a 'limparFotosInconsistentes()' e 'removerDuplicatas()'
-        // para evitar lentidão extrema e excesso de requisições à API do Cloudinary.
         return fotoRepository.findAll();
     }
 
@@ -55,6 +53,7 @@ public class FotoService {
 
             Map<String, Object> options = new HashMap<>();
             options.put("public_id", publicId);
+            options.put("upload_preset", "ml_default"); // Define o preset padrão para fotos
             options.put("overwrite", false);
             options.put("unique_filename", true);
             options.put("use_filename", false);

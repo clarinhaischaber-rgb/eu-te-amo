@@ -57,11 +57,12 @@ public class DesenhoService {
         // Geração de um identificador único exclusivo para cada imagem do desenho
         String publicIdUnico = "desenhos/desenho_" + UUID.randomUUID();
 
-        // Upload do arquivo do Canvas para o Cloudinary especificando o public_id único
+        // Upload do arquivo do Canvas utilizando o upload_preset 'desenhos'
         Map<?, ?> uploadResult = cloudinary.uploader().upload(
                 file.getBytes(),
                 ObjectUtils.asMap(
                         "public_id", publicIdUnico,
+                        "upload_preset", "desenhos",
                         "overwrite", true
                 )
         );
