@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         clearTimeout(slowTimer);
         if (progressInterval) clearInterval(progressInterval);
         
-        if (splashTitle) splashTitle.textContent = "Erro na conexão";
+        if (splashTitle) splashTitle.textContent = "Erro na conexão";s
         if (splashSubtitle) splashSubtitle.textContent = "Não foi possível conectar ao servidor. Tente atualizar.";
     }
 

@@ -16,4 +16,11 @@ public interface DesenhoRepository extends JpaRepository<Desenho, Long> {
      * Busca todos os desenhos ordenados da criação mais recente para a mais antiga.
      */
     List<Desenho> findAllByOrderByCriadoEmDesc();
+
+    /**
+     * Consulta leve que retorna apenas a lista de IDs de todos os desenhos salvos,
+     * ordenados do mais recente para o mais antigo.
+     */
+    @Query("SELECT d.id FROM Desenho d ORDER BY d.id DESC")
+    List<Long> findAllIds();
 }
