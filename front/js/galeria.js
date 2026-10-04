@@ -201,8 +201,14 @@ async function uploadPhotos(files) {
 
     setGalleryStatus('Enviando imagens para o servidor...');
 
+    // Captura o token salvo no localStorage
+    const token = typeof getToken === 'function' ? getToken() : localStorage.getItem('token');
+
     const response = await fetch(`${photosEndpoint}/upload-multiple`, {
         method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}` // Insere o token Bearer aqui
+        },
         body: formData
     });
 
@@ -218,8 +224,18 @@ async function deleteSelectedPhoto() {
     if (selectedPhotoId === null) return;
 
     setGalleryStatus('Excluindo imagem...');
+
+    // Captura o token salvo no localStorage
+    const token = typeof getToken === 'function' ? getToken() : localStorage.getItem('token');
+
     try {
-        const response = await fetch(`${photosEndpoint}/${selectedPhotoId}`, { method: 'DELETE' });
+        const response = await fetch(`${photosEndpoint}/${selectedPhotoId}`, { 
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}` // Insere o token Bearer aqui
+            }
+        });
+        
         if (!response.ok) {
             throw new Error('Não foi possível excluir a imagem.');
         }
