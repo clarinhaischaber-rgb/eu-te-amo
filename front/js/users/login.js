@@ -2,6 +2,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("login-form");
     const visitorBtn = document.getElementById("visitor-btn");
 
+
+    const token = getToken()
+    if(token){
+        window.location.replace('./front/html/Nos.html')
+        return
+    }
+
     // Processa o Login via API
     if (loginForm) {
         loginForm.addEventListener("submit", async (event) => {
