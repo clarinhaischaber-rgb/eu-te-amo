@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const token = getToken()
     if(token){
-        window.location.replace('./front/html/Nos.html')
+        window.location.replace('./Nos.html')
         return
     }
 

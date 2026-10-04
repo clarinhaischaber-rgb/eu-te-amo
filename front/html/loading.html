@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciando...</title>
+    <link rel="stylesheet" href="../css/mensagens.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #121116;
+            color: #ffffff;
+            font-family: sans-serif;
+        }
+        .splash-container {
+            text-align: center;
+            max-width: 360px;
+            width: 85%;
+            padding: 2.5rem 2rem;
+            background: #1e1b26;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #2d2838;
+        }
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: #2d2838;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #f3b6c8, #b8d7f2);
+            transition: width 0.3s ease;
+        }
+        .status-text {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+    </style>
+    <script src="../js/global.js" defer></script>
+    <script src="../js/loading.js" defer></script>
+</head>
+<body>
+    <div class="splash-container">
+        <h2 id="splash-title" style="margin: 0 0 0.5rem 0;">Conectando...</h2>
+        <p id="splash-subtitle" style="margin: 0; font-size: 0.9rem; opacity: 0.7;">Aguarde um momento</p>
+        
+        <div class="progress-bar-bg">
+            <div id="progress-fill" class="progress-bar-fill"></div>
+        </div>
+        
+        <div id="status-percent" class="status-text">0%</div>
+    </div>
+</body>
+</html>
