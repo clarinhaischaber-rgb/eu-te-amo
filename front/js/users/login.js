@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 saveToken(data.token);
 
                 // Redireciona para a página principal ou área logada
-                window.location.href = "Conta.html";
+                window.location.href = "Nos.html";
 
             } catch (error) {
                 alert(error.message);
