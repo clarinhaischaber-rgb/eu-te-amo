@@ -55,8 +55,22 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
 
             .authorizeHttpRequests(auth -> auth
+                // Login e autenticação liberados
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/fotos/**").permitAll()
+
+                // LEITURA PÚBLICA (Qualquer pessoa pode ver fotos e cartas)
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/fotos/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/cartas/**").permitAll()
+
+                // MODIFICAÇÕES (Exigem login com token JWT)
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/fotos/**").authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/fotos/**").authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/fotos/**").authenticated()
+
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/cartas/**").authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/cartas/**").authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/cartas/**").authenticated()
+
                 .anyRequest().authenticated()
             )
 

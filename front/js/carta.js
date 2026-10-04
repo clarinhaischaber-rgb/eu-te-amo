@@ -112,10 +112,16 @@ async function salvarCarta(event) {
 	submit.disabled = true;
 	setStatus('Guardando carta...');
 
+	// Pega o token salvo no login
+	const token = localStorage.getItem('token');
+
 	try {
 		const response = await fetch(cartasEndpoint, {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${token}` // Insere o token aqui
+			},
 			body: JSON.stringify(carta)
 		});
 		if (!response.ok) throw new Error('Não foi possível guardar a carta.');
@@ -132,8 +138,17 @@ async function salvarCarta(event) {
 
 async function deletarCarta(id) {
 	if (!window.confirm('Excluir esta carta?')) return;
+
+	// Pega o token salvo no login
+	const token = localStorage.getItem('token');
+
 	try {
-		const response = await fetch(`${cartasEndpoint}/${id}`, { method: 'DELETE' });
+		const response = await fetch(`${cartasEndpoint}/${id}`, { 
+			method: 'DELETE',
+			headers: {
+				'Authorization': `Bearer ${token}` // Insere o token aqui
+			}
+		});
 		if (!response.ok) throw new Error('Não foi possível excluir a carta.');
 		await carregarCartas();
 	} catch (error) {

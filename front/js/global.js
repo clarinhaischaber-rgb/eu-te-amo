@@ -28,8 +28,11 @@ function checkAuth() {
     }
 }
 
-// --- Comportamento de Menu e Navbar Dinâmica ---
+// --- Comportamento Global de UI & Permissões ---
 document.addEventListener("DOMContentLoaded", () => {
+    const token = getToken();
+
+    // 1. Menu e Navbar Dinâmica
     const menuButton = document.querySelector('.menu-toggle');
     const menu = document.querySelector('.nav-menu');
     const navLinks = document.querySelectorAll('.nav-link');
@@ -52,13 +55,27 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- Ocultar/Exibir o link "Conta" na Navbar ---
+    // 2. Ocultar/Exibir o link "Conta" na Navbar
     const accountLink = document.querySelector('a.nav-link[href="Conta.html"]');
     if (accountLink) {
-        if (getToken()) {
-            accountLink.style.display = "inline-block"; // Exibe se tiver token
-        } else {
-            accountLink.style.display = "none";         // Esconde se for visitante
-        }
+        accountLink.style.display = token ? "inline-block" : "none";
+    }
+
+    // 3. Regras Globais para Visitantes (Sem Token)
+    if (!token) {
+        // Oculta formulários de criação/envio (Cartas, Fotos, etc.)
+        const formsToHide = document.querySelectorAll('#carta-form, #foto-form, .gallery-actions');
+        formsToHide.forEach(element => {
+            element.style.display = 'none';
+        });
+
+        // Aplica um estilo CSS global para esconder botões de exclusão mesmo se forem gerados dinamicamente
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .carta-delete, .foto-delete, .btn-delete, #add-photo-button { 
+                display: none !important; 
+            }
+        `;
+        document.head.appendChild(style);
     }
 });
