@@ -1092,7 +1092,7 @@ class JoestarGame {
             GAME_CONFIG.WORLD.GROUND_Y
         );
 
-        // Carrega sprites
+        // Carrega sprites dos lutadores
         const p1Sprites = AssetLoader.loadSprites(
             GAME_CONFIG.CHARACTERS.P1.spritesFolder,
             GAME_CONFIG.SPRITES.FRAMES,
@@ -1110,10 +1110,10 @@ class JoestarGame {
 
         this.projectiles = [];
 
-        // Estado do Jogo (O JOGO COMEÇA PAUSADO/DESLIGADO POR PADRÃO!)
+        // Estado do Jogo
         this.gameOver = false;
         this.isPaused = false;
-        this.gameStarted = false; // <-- CORRIGIDO: Inicia como false
+        this.gameStarted = false;
         this.hasPaused = false;
         this.pendingFullscreenResume = false;
         this.winnerMessage = '';
@@ -1126,8 +1126,8 @@ class JoestarGame {
         this.timeStopCancelTimer = 0;
         this.timeStopPhase = null;
         this.timeStopNormalFighterId = null;
-        this.timeStopWave = null; // Onda de expansão circular { x, y, radius, maxRadius, speed }
-        this.pendingUlt = null;   // Delay para ativar o Za Warudo (sincronização do Jotaro)
+        this.timeStopWave = null;
+        this.pendingUlt = null;
         this.ultimateKnivesSpawned = false;
 
         this.setupEventListeners();
@@ -1196,13 +1196,11 @@ class JoestarGame {
         this.gameStarted = true;
         this.soundManager.resumeBgm();
         
-        const startOverlay = document.getElementById('start-overlay');
-        if (startOverlay) {
-            startOverlay.style.display = 'none';
-        }
-
-        if (this.canvas.parentElement && this.canvas.parentElement.parentElement) {
-            this.canvas.parentElement.parentElement.classList.add('game-started');
+        const wrapper = document.getElementById('gameWrapper') || this.canvas.parentElement;
+        if (wrapper) {
+            wrapper.classList.add('game-started');
+            wrapper.classList.remove('game-over');
+            wrapper.classList.remove('is-paused');
         }
     }
 
@@ -1384,13 +1382,18 @@ class JoestarGame {
 
     togglePause() {
         this.isPaused = !this.isPaused;
+        const wrapper = document.getElementById('gameWrapper') || this.canvas.parentElement;
+
         if (this.isPaused) {
             this.hasPaused = true;
-            if (this.canvas.parentElement && this.canvas.parentElement.parentElement) {
-                this.canvas.parentElement.parentElement.classList.add('has-restart');
+            if (wrapper) {
+                wrapper.classList.add('is-paused');
             }
             this.soundManager.pauseBgm();
         } else {
+            if (wrapper) {
+                wrapper.classList.remove('is-paused');
+            }
             this.soundManager.resumeBgm();
         }
     }
@@ -1568,6 +1571,13 @@ class JoestarGame {
         this.isPaused = false;
         this.winnerMessage = '';
         this.gameStarted = true;
+
+        const wrapper = document.getElementById('gameWrapper') || this.canvas.parentElement;
+        if (wrapper) {
+            wrapper.classList.add('game-started');
+            wrapper.classList.remove('game-over');
+            wrapper.classList.remove('is-paused');
+        }
     }
 
     update() {
@@ -1693,7 +1703,11 @@ class JoestarGame {
         this.winnerMessage = message;
         this.soundManager.stopBgm();
 
-        // Toca som de derrota se o Player 1 perdeu
+        const wrapper = document.getElementById('gameWrapper') || this.canvas.parentElement;
+        if (wrapper) {
+            wrapper.classList.add('game-over');
+        }
+
         if (this.player1.hp <= 0) {
             this.soundManager.play('lose');
         } else if (message === 'PLAYER 1 VENCEU!') {
@@ -1871,7 +1885,6 @@ class JoestarGame {
     }
 }
 
-// Inicialização automática quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', () => {
     new JoestarGame('gameCanvas');
 });

@@ -47,10 +47,7 @@
         <section class="game-section" id="jogo">
             <h2>Minigame do Joestar</h2>
             <div class="game-wrapper" id="gameWrapper">
-                <div class="game-start-overlay" id="gameStartOverlay">
-                    <button type="button" id="btnStartGame" class="game-start-btn">Iniciar jogo</button>
-                    <button type="button" id="btnReturnFullscreen" class="game-start-btn return-fullscreen-btn">Voltar para tela cheia</button>
-                </div>
+                
                 <!-- BARRA DE FERRAMENTAS DO JOGO -->
                 <div class="game-toolbar">
                     <button type="button" id="btnFullscreen" class="game-btn game-btn-fullscreen" title="Sair da tela cheia" aria-label="Sair da tela cheia">
@@ -75,7 +72,12 @@
                     </button>
                 </div>
 
+                <!-- CONTÊINER DO CANVAS: O Overlay agora é filho direto para delimitação exata -->
                 <div class="game-container">
+                    <div class="game-start-overlay" id="gameStartOverlay">
+                        <button type="button" id="btnStartGame" class="game-start-btn">Iniciar jogo</button>
+                        <button type="button" id="btnReturnFullscreen" class="game-start-btn return-fullscreen-btn">Voltar para tela cheia</button>
+                    </div>
                     <!-- A tag canvas cria a janela/tela 2D onde o jogo acontece -->
                     <canvas id="gameCanvas" width="800" height="400"></canvas>
                 </div>
@@ -120,5 +122,4 @@
 
 </body>
 
-</html>
 </html>

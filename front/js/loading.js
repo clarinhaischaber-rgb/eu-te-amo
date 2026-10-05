@@ -26,6 +26,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }, 500);
     }, 1500);
 
+            // --- LÓGICA DO JOGO DO DINOSSAURO ---
+            initDinoGame();
+            
     try {
         // 1. Tenta "acordar" a API e faz o pré-carregamento dos dados em paralelo (Cartas, Fotos e Desenhos)
         const [cartasRes, fotosRes, desenhosRes] = await Promise.all([
@@ -53,6 +56,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             localStorage.setItem("cached_desenhos", JSON.stringify(desenhos));
         }
 
+        
+
         // Completa o carregamento
         setProgress(100);
 
@@ -75,8 +80,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (splashSubtitle) splashSubtitle.textContent = "Não foi possível conectar ao servidor. Tente atualizar.";
     }
 
-    // --- LÓGICA DO JOGO DO DINOSSAURO ---
-    initDinoGame();
+    
 
 });
 
