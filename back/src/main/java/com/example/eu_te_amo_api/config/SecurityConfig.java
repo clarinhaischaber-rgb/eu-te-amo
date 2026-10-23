@@ -57,7 +57,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Login e autenticação liberados
                 .requestMatchers("/api/auth/**").permitAll()
-.requestMatchers("/ping").permitAll()
+                .requestMatchers("/ping").permitAll()
 
 
                 // LEITURA PÚBLICA (Qualquer pessoa pode ver fotos e cartas)
